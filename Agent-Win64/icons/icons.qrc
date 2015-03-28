@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/">
+        <file>agent.png</file>
+    </qresource>
+</RCC>
