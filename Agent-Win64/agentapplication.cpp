@@ -15,7 +15,7 @@ AgentApplication::AgentApplication(int argc, char *argv[]) :
 
 AgentApplication::~AgentApplication()
 {
-
+    delete m_trayIcon;
     saveSettings();
 }
 
