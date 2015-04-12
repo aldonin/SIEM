@@ -6,13 +6,15 @@ SOURCES += \
     agentapplication.cpp \
     trayicon.cpp \
     settingswidget.cpp \
-    collector.cpp
+    collector.cpp \
+    watcher.cpp
 
 HEADERS += \
     agentapplication.h \
     trayicon.h \
     settingswidget.h \
-    collector.h
+    collector.h \
+    watcher.h
 
 RESOURCES += \
     icons/icons.qrc

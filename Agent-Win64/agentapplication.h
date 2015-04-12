@@ -7,10 +7,19 @@ class TrayIcon;
 
 class AgentApplication : public QApplication
 {
+    Q_ENUMS(Journal)
+
 public:
     AgentApplication(int argc, char *argv[]);
     ~AgentApplication();
 
+    enum Journal {
+        Application,
+        Security,
+        Setup,
+        System,
+        ForwardedEvents
+    };
 
 private:
     void saveSettings();
