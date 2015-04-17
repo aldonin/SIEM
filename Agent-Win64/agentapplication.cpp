@@ -1,6 +1,7 @@
 #include "agentapplication.h"
 #include <QSettings>
 #include "trayicon.h"
+#include <QDebug>
 
 AgentApplication::AgentApplication(int argc, char *argv[]) :
     QApplication(argc, argv)
@@ -15,8 +16,9 @@ AgentApplication::AgentApplication(int argc, char *argv[]) :
 
 AgentApplication::~AgentApplication()
 {
+    //qDebug() << "~AgentApp";
     delete m_trayIcon;
-    saveSettings();
+    //saveSettings();
 }
 
 void AgentApplication::saveSettings()

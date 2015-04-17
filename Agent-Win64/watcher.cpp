@@ -1,7 +1,6 @@
 #include "watcher.h"
 #include <QFileSystemWatcher>
 #include <QDebug>
-#include <winevt.h>
 #include <QTimer>
 
 #define SECOND_PER_MINUTE 60
@@ -34,6 +33,11 @@ Watcher::~Watcher()
     delete m_timer;
 }
 
+uint Watcher::interval() const
+{
+    return m_timer->interval();
+}
+
 void Watcher::changeMode(const Watcher::Mode mode)
 {
     m_mode = mode;
@@ -41,13 +45,18 @@ void Watcher::changeMode(const Watcher::Mode mode)
 
 void Watcher::debugInfo()
 {
-    qDebug() << "Timedout: " << m_timer-> remainingTime();
+    qDebug() << "Timedout: " << m_timer->interval();
 }
 
-void Watcher::changeTimer(const uint mins)
+void Watcher::changeInterval(const uint mins)
 {
     if (m_mode == Mode::Timed) {
         m_timer->start(mins * SECOND_PER_MINUTE * MSEC_PER_SECOND);
     }
+}
+
+void Watcher::updateSettings()
+{
+    // TODO брать новые настройки из QSettings
 }
 

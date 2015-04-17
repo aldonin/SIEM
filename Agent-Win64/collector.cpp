@@ -10,7 +10,7 @@ Collector::Collector(QObject *parent) : QObject(parent)
     connect(m_prc, SIGNAL(readyReadStandardError()), this, SLOT(readError()));
 
     connect(m_prc, SIGNAL(error(QProcess::ProcessError)), this, SLOT(emitError(QProcess::ProcessError)));
-    connect(m_prc, SIGNAL(finished(int)), m_prc, SLOT(deleteLater()));
+    //connect(m_prc, SIGNAL(finished(int)), m_prc, SLOT(deleteLater()));
 
    // prc->start(executeStr);
 
@@ -36,6 +36,7 @@ void Collector::readError()
 
 void Collector::emitError(QProcess::ProcessError err)
 {
+    Q_UNUSED(err);
     qDebug() << m_prc->error();
 }
 
@@ -45,5 +46,10 @@ void Collector::collect(const AgentApplication::Journal type)
     Q_UNUSED(type)
     m_prc->start(executeStr);
     m_prc->waitForFinished();
+}
+
+void Collector::updateSettings()
+{
+    // TODO брать настройки из QSettings
 }
 
