@@ -20,8 +20,9 @@ Watcher::Watcher(QObject *parent) : QObject(parent)
     m_timer->start(10000);
 
 
-    //qDebug() << m_watcher->addPath("C:/Windows/System32/winevt/Logs/Application.evtx");
-   // qDebug() << m_watcher->addPath("C:/Windows/System32/winevt");
+    qDebug() << m_watcher->addPath("C:/Windows/Sysnative/winevt/Logs/Application.evtx");
+    qDebug() << m_watcher->addPath("C:/Windows/Sysnative/winevt");
+    qDebug() << m_watcher->addPath("C:/Windows/System32/winevt");
 
 }
 
