@@ -20,9 +20,12 @@ public:
         FileChanged
     };
 
+    uint interval() const;
+
 public slots:
     void changeMode(const Watcher::Mode mode);
-    void changeTimer(const unsigned int mins);
+    void changeInterval(const uint mins);
+    void updateSettings();
 
 private slots:
     void debugInfo();
@@ -32,6 +35,7 @@ private:
     QFileSystemWatcher *m_watcher;
     QTimer *m_timer;
     Mode m_mode;
+
 };
 
 #endif // WATCHER_H

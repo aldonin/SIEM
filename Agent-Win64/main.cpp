@@ -8,15 +8,15 @@
 
 int main(int argc, char* argv[])
 {
-   QApplication app(argc, argv);
-    // AgentApplication app(argc, argv);
+   //QApplication app(argc, argv);
+   AgentApplication app(argc, argv);
 
    //SettingsWidget w;
    //w.show();
    //Collector c;
    //c.collect();
 
-    Watcher w;
+    //Watcher w;
 
 
 

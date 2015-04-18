@@ -23,6 +23,8 @@ public slots:
     void emitError(QProcess::ProcessError err);
 
     void collect(const AgentApplication::Journal type = AgentApplication::Journal::Application);
+
+    void updateSettings();
 };
 
 #endif // COLLECTOR_H
