@@ -15,13 +15,14 @@ Watcher::Watcher(QObject *parent) : QObject(parent)
     m_mode = Mode::Timed;
 
     connect(m_timer, SIGNAL(timeout()), this, SLOT(debugInfo()));
+    connect(m_watcher, SIGNAL(fileChanged(QString)), this, SLOT(journalChange(QString)));
 
     m_timer->start(10000);
 
 
-    qDebug() << m_watcher->addPath("C:/Windows/Sysnative/winevt/Logs/Application.evtx");
-    qDebug() << m_watcher->addPath("C:/Windows/Sysnative/winevt");
-    qDebug() << m_watcher->addPath("C:/Windows/System32/winevt");
+    //qDebug() << m_watcher->addPath("C:/Windows/Sysnative/winevt/Logs/Application.evtx");
+   // qDebug() << m_watcher->addPath("C:/Windows/Sysnative/winevt");
+   // qDebug() << m_watcher->addPath("C:/Windows/System32/winevt");
 
 }
 
@@ -59,5 +60,13 @@ void Watcher::changeInterval(const uint mins)
 void Watcher::updateSettings()
 {
     // TODO брать новые настройки из QSettings
+}
+
+void Watcher::journalChange(const QString &path)
+{
+    // get name journal, remove all subdirs
+    QString str = path.section("/", -1);
+
+    emit journalChange( AgentApplication::stringToJournal(str) );
 }
 

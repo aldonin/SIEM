@@ -14,7 +14,7 @@ public:
     void setIsCanClose(const bool value);
 
 protected:
-    void closeEvent(QCloseEvent *event) override;
+    void closeEvent(QCloseEvent *event) Q_DECL_OVERRIDE;
 
 private:
     bool m_isCanClose;

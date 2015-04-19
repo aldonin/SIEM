@@ -2,6 +2,7 @@
 #define WATCHER_H
 
 #include <QObject>
+#include "agentapplication.h"
 
 class QFileSystemWatcher;
 class QTimer;
@@ -26,6 +27,12 @@ public slots:
     void changeMode(const Watcher::Mode mode);
     void changeInterval(const uint mins);
     void updateSettings();
+
+private slots:
+    void journalChange(const QString &path);
+
+signals:
+    void journalChange(AgentApplication::Journal);
 
 private slots:
     void debugInfo();

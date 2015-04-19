@@ -21,6 +21,9 @@ public:
         ForwardedEvents
     };
 
+    static QString journalToString(const Journal type);
+    static Journal stringToJournal(const QString &str);
+
 private:
     void saveSettings();
     void readSettings();

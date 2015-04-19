@@ -12,7 +12,6 @@ SettingsWidget::SettingsWidget(QWidget *parent) :
     connect(cancelBtn,  SIGNAL(clicked()), this, SLOT(close()));
 
     connect(okBtn, SIGNAL(clicked()), this, SLOT(saveSettings()));
-    // FIXME Хз, успеет ли он сохранить. Возможно переопределить closeEvent и убарть флаг DeleteOnCLose чтобы постоянно не перерисовывать окно
     connect(okBtn, SIGNAL(clicked()), this, SLOT(close()));
 
     connect(applyBtn, SIGNAL(clicked()), this, SLOT(saveSettings()));
