@@ -2,6 +2,7 @@
 #include <QFileSystemWatcher>
 #include <QDebug>
 #include <QTimer>
+#include <QSettings>
 
 #define SECOND_PER_MINUTE 60
 #define MSEC_PER_SECOND 1000
@@ -10,6 +11,13 @@ Watcher::Watcher(QObject *parent) : QObject(parent)
 {
     m_watcher = new QFileSystemWatcher(this);
     m_timer = new QTimer(this);
+
+    m_monitoredJournals.insert("Application", false);
+    m_monitoredJournals.insert("Security", false);
+    m_monitoredJournals.insert("Setup", false);
+    m_monitoredJournals.insert("System", false);
+    m_monitoredJournals.insert("ForwardedEvents", false);
+
 
     // FIXME исправить на чтение параметров из QSettings
     m_mode = Mode::Timed;
@@ -33,6 +41,9 @@ Watcher::~Watcher()
     if (m_timer->isActive())
         m_timer->stop();
     delete m_timer;
+
+    m_monitoredJournals.clear();
+    //delete m_monitoredJournals;
 }
 
 uint Watcher::interval() const
@@ -59,7 +70,16 @@ void Watcher::changeInterval(const uint mins)
 
 void Watcher::updateSettings()
 {
-    // TODO брать новые настройки из QSettings
+    QSettings settings;
+    settings.beginGroup("monitoredJournals");
+    QMapIterator<QString, bool> it(m_monitoredJournals);
+
+    while (it.hasNext()) {
+        it.next();
+        m_monitoredJournals.insert(it.key(), it.value());
+    }
+
+    settings.endGroup();
 }
 
 void Watcher::journalChange(const QString &path)

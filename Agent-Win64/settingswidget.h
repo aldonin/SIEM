@@ -21,10 +21,12 @@ private:
 
 signals:
     void settingsChanged();
+    void settingsSaved();
 
 private slots:
     void notifyAllAboutChanges();
     void saveSettings();
+    void readSettings();
 };
 
 #endif // SETTINGSWIDGET_H

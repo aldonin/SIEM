@@ -7,6 +7,8 @@ AgentApplication::AgentApplication(int argc, char *argv[]) :
     QApplication(argc, argv)
 {
     QCoreApplication::setApplicationName("SIEM Agent-Win64");
+    QCoreApplication::setOrganizationName("LETI");
+    QCoreApplication::setOrganizationDomain("eltech.ru");
     QCoreApplication::setApplicationVersion("0.1");
 
     m_trayIcon = new TrayIcon;

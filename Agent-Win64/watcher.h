@@ -42,6 +42,7 @@ private:
     QFileSystemWatcher *m_watcher;
     QTimer *m_timer;
     Mode m_mode;
+    QMap<QString, bool> m_monitoredJournals;
 
 };
 
