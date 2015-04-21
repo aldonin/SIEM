@@ -3,6 +3,7 @@
 #include "settingswidget.h"
 #include "collector.h"
 #include "watcher.h"
+#include "journalfinder.h"
 
 
 #include <QDebug>
@@ -12,6 +13,7 @@ int main(int argc, char* argv[])
 {
    //QApplication app(argc, argv);
    AgentApplication app(argc, argv);
+   qDebug() <<JournalFinder::path(AgentApplication::Application);
 
   //SettingsWidget w;
    //w.show();

@@ -18,10 +18,6 @@ private:
     QProcess *m_prc;
 
 public slots:
-    void readyRead();
-    void readError();
-    void emitError(QProcess::ProcessError err);
-
     void collect(const AgentApplication::Journal type = AgentApplication::Journal::Application);
 
     void updateSettings();

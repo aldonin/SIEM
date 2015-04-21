@@ -1,29 +1,50 @@
 #include "journalfinder.h"
 
 #include <QDir>
+#include <QDebug>
 
 QString JournalFinder::path(AgentApplication::Journal type)
 {
-    if (found())
-        return QString(QDir::rootPath() + "Windows/Sysnative/winevt/Logs/%1.evtx")
-                .arg( AgentApplication::journalToString(type) );
-    else
+    bool ok = false;
+    QString path = found(ok);
+    if (ok) {
+        if (QSysInfo::windowsVersion() > QSysInfo::WV_XP)
+            return QString(path + "/%1.%2")
+                    .arg( AgentApplication::journalToString(type) ).arg("evtx");
+        else
+            return QString(path + "/%1.%2")
+                    .arg( AgentApplication::journalToString(type) ).arg("evt");
+    } else {
         return QString();
+    }
 }
 
-bool JournalFinder::found()
+QString JournalFinder::found(bool &ok)
 {
     QDir dir = QDir(QDir::rootPath());
     if (!dir.cd("Windows"))
-        return false;
+        ok = false;
+#ifdef Q_OS_WIN64
     if (!dir.cd("Sysnative"))
-        return false;
+        ok = false;
     if (!dir.cd("winevt"))
-        return false;
+        ok = false;
     if (!dir.cd("Logs"))
-        return false;
-
-    return true;
+        ok = false;
+#endif
+#ifdef Q_OS_WIN32
+    if (!dir.cd("System32"))
+        ok = false;
+    if (QSysInfo::windowsVersion() <= QSysInfo::WV_XP){
+        if (!dir.cd("config"))
+            ok = false;
+    } else {
+        if (!dir.cd("winevt"))
+            ok = false;
+    }
+#endif
+    ok = true;
+    return dir.path();
 }
 
 JournalFinder::JournalFinder()

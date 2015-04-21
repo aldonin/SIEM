@@ -8,7 +8,7 @@ class JournalFinder
 {
 public:
     static QString path(AgentApplication::Journal type);
-    static bool found();
+    static QString found(bool &ok);
 
 private:
     JournalFinder();

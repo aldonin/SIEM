@@ -12,15 +12,16 @@ Watcher::Watcher(QObject *parent) : QObject(parent)
     m_watcher = new QFileSystemWatcher(this);
     m_timer = new QTimer(this);
 
-    m_monitoredJournals.insert("Application", false);
-    m_monitoredJournals.insert("Security", false);
-    m_monitoredJournals.insert("Setup", false);
-    m_monitoredJournals.insert("System", false);
-    m_monitoredJournals.insert("ForwardedEvents", false);
+//    m_monitoredJournals.insert("Application", false);
+//    m_monitoredJournals.insert("Security", false);
+//    m_monitoredJournals.insert("Setup", false);
+//    m_monitoredJournals.insert("System", false);
+//    m_monitoredJournals.insert("ForwardedEvents", false);
 
 
-    // FIXME исправить на чтение параметров из QSettings
-    m_mode = Mode::Timed;
+
+//    m_mode = Mode::Timed;
+    updateSettings();
 
     connect(m_timer, SIGNAL(timeout()), this, SLOT(debugInfo()));
     connect(m_watcher, SIGNAL(fileChanged(QString)), this, SLOT(journalChange(QString)));
@@ -80,6 +81,9 @@ void Watcher::updateSettings()
     }
 
     settings.endGroup();
+
+    int mode = settings.value("watchedMode/mode").toInt();
+    m_mode = ( mode == 0 ? Mode::Timed : Mode::FileChanged);
 }
 
 void Watcher::journalChange(const QString &path)

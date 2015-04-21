@@ -59,9 +59,10 @@ void SettingsWidget::saveSettings()
     settings.endGroup();
 
     // 0 - timedMode, 1 - fileChangedMode
-
     int mode = timedMode->isChecked() ? 0 : 1;
     settings.setValue("watcherMode/mode", mode);
+
+    settings.setValue("general/Startup", startUp->isChecked());
 
     emit settingsSaved();
 }
@@ -79,6 +80,8 @@ void SettingsWidget::readSettings()
 
     int mode = settings.value("watchedMode/mode").toInt();
     timedMode->setChecked( mode == 0 ? true : false);
+
+    startUp->setChecked(settings.value("general/Startup").toBool());
 }
 
 void SettingsWidget::notifyAllAboutChanges()

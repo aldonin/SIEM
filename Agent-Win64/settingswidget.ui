@@ -202,7 +202,7 @@
             <attribute name="title">
              <string>General</string>
             </attribute>
-            <layout class="QVBoxLayout" name="verticalLayout_10">
+            <layout class="QVBoxLayout" name="verticalLayout_11">
              <item>
               <widget class="QGroupBox" name="modeBox">
                <property name="title">
@@ -224,6 +224,24 @@
                  </widget>
                 </item>
                </layout>
+              </widget>
+             </item>
+             <item>
+              <widget class="QGroupBox" name="groupBox_2">
+               <property name="title">
+                <string>Startup</string>
+               </property>
+               <layout class="QVBoxLayout" name="verticalLayout_10">
+                <item>
+                 <widget class="QCheckBox" name="startUp">
+                  <property name="text">
+                   <string>Startup on OS load</string>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+               <zorder>startUp</zorder>
+               <zorder>startUp</zorder>
               </widget>
              </item>
              <item>
