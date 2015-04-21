@@ -19,6 +19,8 @@ TrayIcon::TrayIcon()
 
     m_trayIcon->setContextMenu(menu);
     m_trayIcon->show();
+
+    connect(m_settings, SIGNAL(settingsChanged()), this, SLOT(undateSettings()));
 }
 
 TrayIcon::~TrayIcon()
@@ -32,5 +34,10 @@ TrayIcon::~TrayIcon()
 void TrayIcon::openSettings()
 {
     m_settings->show();
+}
+
+void TrayIcon::undateSettings()
+{
+    emit updateSettingNeeded();
 }
 

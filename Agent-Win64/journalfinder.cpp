@@ -22,27 +22,24 @@ QString JournalFinder::path(AgentApplication::Journal type)
 QString JournalFinder::found(bool &ok)
 {
     QDir dir = QDir(QDir::rootPath());
+
     if (!dir.cd("Windows"))
         ok = false;
-#ifdef Q_OS_WIN64
-    if (!dir.cd("Sysnative"))
-        ok = false;
-    if (!dir.cd("winevt"))
-        ok = false;
-    if (!dir.cd("Logs"))
-        ok = false;
-#endif
-#ifdef Q_OS_WIN32
-    if (!dir.cd("System32"))
-        ok = false;
+
     if (QSysInfo::windowsVersion() <= QSysInfo::WV_XP){
+        if (!dir.cd("System32"))
+            ok = false;
         if (!dir.cd("config"))
             ok = false;
     } else {
+        if (!dir.cd("Sysnative"))
+            ok = false;
         if (!dir.cd("winevt"))
             ok = false;
+        if (!dir.cd("Logs"))
+            ok = false;
     }
-#endif
+
     ok = true;
     return dir.path();
 }

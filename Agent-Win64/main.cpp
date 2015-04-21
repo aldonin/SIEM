@@ -13,7 +13,7 @@ int main(int argc, char* argv[])
 {
    //QApplication app(argc, argv);
    AgentApplication app(argc, argv);
-   qDebug() <<JournalFinder::path(AgentApplication::Application);
+
 
   //SettingsWidget w;
    //w.show();

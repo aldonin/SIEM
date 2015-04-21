@@ -6,7 +6,7 @@
 class QSystemTrayIcon;
 class SettingsWidget;
 
-class TrayIcon : QObject
+class TrayIcon : public QObject
 {
     Q_OBJECT
 
@@ -16,7 +16,7 @@ public:
 
 signals:
     // TODO пробросить эту функцию в agentapplication и добавлять в автозапуск
-    void sayBaseApplitionUpdateSetting();
+    void updateSettingNeeded();
     // NOTE для XP regedit : HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Run
 
 private:
@@ -25,6 +25,7 @@ private:
 
 private slots:
     void openSettings();
+    void undateSettings();
 };
 
 #endif // TRAYICON_H

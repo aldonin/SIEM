@@ -8,6 +8,7 @@ class TrayIcon;
 class AgentApplication : public QApplication
 {
     Q_ENUMS(Journal)
+    Q_OBJECT
 
 public:
     AgentApplication(int argc, char *argv[]);
@@ -23,6 +24,9 @@ public:
 
     static QString journalToString(const Journal type);
     static Journal stringToJournal(const QString &str);
+
+public slots:
+    void updateSettings();
 
 private:
     void saveSettings();

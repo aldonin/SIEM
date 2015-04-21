@@ -14,6 +14,7 @@ AgentApplication::AgentApplication(int argc, char *argv[]) :
     m_trayIcon = new TrayIcon;
 
     setQuitOnLastWindowClosed(false);
+    connect(m_trayIcon, SIGNAL(updateSettingNeeded()), this, SLOT(updateSettings()));
 }
 
 AgentApplication::~AgentApplication()
@@ -75,6 +76,21 @@ AgentApplication::Journal AgentApplication::stringToJournal(const QString &str)
 
 
     return type;
+}
+
+void AgentApplication::updateSettings()
+{
+    QSettings settings;
+    bool isStartup = settings.value("general/Startup").toBool();
+    QSettings setStartup("HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", QSettings::NativeFormat);
+
+    QString value = AgentApplication::applicationFilePath();
+    value.replace(QRegExp("/"), "\\");
+
+    if (isStartup)
+        setStartup.setValue("Siem", value);
+     else
+        setStartup.remove("Siem");
 }
 
 void AgentApplication::saveSettings()
