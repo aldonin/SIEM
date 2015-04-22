@@ -2,8 +2,11 @@
 #define AGENTAPPLICATION_H
 
 #include <QApplication>
+#include <QThread>
 
 class TrayIcon;
+class Watcher;
+class Collector;
 
 class AgentApplication : public QApplication
 {
@@ -33,9 +36,10 @@ private:
     void readSettings();
 
     TrayIcon *m_trayIcon;
+    Watcher *m_watcher;
+    Collector *m_collector;
 };
 
 // TODO добавить трансляторы
-// TODO автозапуск
 
 #endif // AGENTAPPLICATION_H

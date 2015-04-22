@@ -12,18 +12,10 @@ Watcher::Watcher(QObject *parent) : QObject(parent)
     m_watcher = new QFileSystemWatcher(this);
     m_timer = new QTimer(this);
 
-//    m_monitoredJournals.insert("Application", false);
-//    m_monitoredJournals.insert("Security", false);
-//    m_monitoredJournals.insert("Setup", false);
-//    m_monitoredJournals.insert("System", false);
-//    m_monitoredJournals.insert("ForwardedEvents", false);
-
-
-
-//    m_mode = Mode::Timed;
     updateSettings();
 
     connect(m_timer, SIGNAL(timeout()), this, SLOT(debugInfo()));
+    connect(m_timer, SIGNAL(timeout()), this, SLOT(timeToCollect()));
     connect(m_watcher, SIGNAL(fileChanged(QString)), this, SLOT(journalChange(QString)));
 
     m_timer->start(10000);
@@ -32,6 +24,8 @@ Watcher::Watcher(QObject *parent) : QObject(parent)
     //qDebug() << m_watcher->addPath("C:/Windows/Sysnative/winevt/Logs/Application.evtx");
    // qDebug() << m_watcher->addPath("C:/Windows/Sysnative/winevt");
    // qDebug() << m_watcher->addPath("C:/Windows/System32/winevt");
+
+    qDebug() << "QThread wather: " << QThread::currentThreadId();
 
 }
 
@@ -60,6 +54,11 @@ void Watcher::changeMode(const Watcher::Mode mode)
 void Watcher::debugInfo()
 {
     qDebug() << "Timedout: " << m_timer->interval();
+}
+
+void Watcher::timeToCollect()
+{
+    emit timedOut();
 }
 
 void Watcher::changeInterval(const uint mins)
@@ -92,5 +91,10 @@ void Watcher::journalChange(const QString &path)
     QString str = path.section("/", -1);
 
     emit journalChange( AgentApplication::stringToJournal(str) );
+}
+
+void Watcher::currentThread()
+{
+    qDebug() << "QThread wather: " << QThread::currentThreadId();
 }
 

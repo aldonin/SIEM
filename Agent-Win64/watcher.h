@@ -30,12 +30,15 @@ public slots:
 
 private slots:
     void journalChange(const QString &path);
+    void currentThread();
 
 signals:
     void journalChange(AgentApplication::Journal);
+    void timedOut();
 
 private slots:
     void debugInfo();
+    void timeToCollect();
 
 
 private:

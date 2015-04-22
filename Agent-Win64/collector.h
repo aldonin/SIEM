@@ -19,6 +19,7 @@ private:
 
 public slots:
     void collect(const AgentApplication::Journal type = AgentApplication::Journal::Application);
+    void currentThread();
 
     void updateSettings();
 };

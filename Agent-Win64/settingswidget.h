@@ -27,6 +27,8 @@ private slots:
     void notifyAllAboutChanges();
     void saveSettings();
     void readSettings();
+
+    //TODO добавить слот на изменения времени, см виджет
 };
 
 #endif // SETTINGSWIDGET_H

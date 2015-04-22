@@ -1,7 +1,10 @@
 #include "agentapplication.h"
-#include <QSettings>
 #include "trayicon.h"
+#include "watcher.h"
+#include "collector.h"
+
 #include <QDebug>
+#include <QSettings>
 
 AgentApplication::AgentApplication(int argc, char *argv[]) :
     QApplication(argc, argv)
@@ -12,15 +15,38 @@ AgentApplication::AgentApplication(int argc, char *argv[]) :
     QCoreApplication::setApplicationVersion("0.1");
 
     m_trayIcon = new TrayIcon;
+    m_watcher = new Watcher;
+    m_collector = new Collector;
+
+
+
+
+    QThread *thread = new QThread;
+    m_watcher->moveToThread(thread);
+    connect(thread, SIGNAL(started()), m_watcher, SLOT(currentThread()));
+    connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
+    thread->start();
+
+    QThread *secThread = new QThread;
+    m_collector->moveToThread(secThread);
+    connect(thread, SIGNAL(started()), m_collector, SLOT(currentThread()));
+    connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
+    secThread->start();
+
+
+
 
     setQuitOnLastWindowClosed(false);
     connect(m_trayIcon, SIGNAL(updateSettingNeeded()), this, SLOT(updateSettings()));
+    qDebug() << "QThread AgentApplication: " << QThread::currentThreadId();
 }
 
 AgentApplication::~AgentApplication()
 {
     //qDebug() << "~AgentApp";
     delete m_trayIcon;
+    delete m_watcher;
+    delete m_collector;
     //saveSettings();
 }
 

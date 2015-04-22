@@ -24,6 +24,7 @@ SettingsWidget::SettingsWidget(QWidget *parent) :
 
     connect(this, SIGNAL(settingsSaved()), this, SLOT(notifyAllAboutChanges()));
 
+
 }
 
 bool SettingsWidget::isCanClose() const

@@ -15,9 +15,7 @@ public:
     ~TrayIcon();
 
 signals:
-    // TODO пробросить эту функцию в agentapplication и добавлять в автозапуск
     void updateSettingNeeded();
-    // NOTE для XP regedit : HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Run
 
 private:
     QSystemTrayIcon *m_trayIcon;

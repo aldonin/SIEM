@@ -1,5 +1,6 @@
 #include "collector.h"
 #include <QDebug>
+#include <QThread>
 
 Collector::Collector(QObject *parent) : QObject(parent)
 {
@@ -25,6 +26,11 @@ void Collector::collect(const AgentApplication::Journal type)
     Q_UNUSED(type)
     m_prc->start(executeStr);
     m_prc->waitForFinished();
+}
+
+void Collector::currentThread()
+{
+    qDebug() << "QThread collector: " << QThread::currentThreadId();
 }
 
 void Collector::updateSettings()
