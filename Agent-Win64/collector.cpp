@@ -5,7 +5,7 @@
 
 Collector::Collector(QObject *parent) : QObject(parent)
 {
-    m_prc = new QProcess(this);
+    m_prc = new QProcess;
     executeStr = "cmd /C powershell -NoProfile –ExecutionPolicy Unrestricted –File D:/1.ps1";
 
     //connect(m_prc, SIGNAL(finished(int)), m_prc, SLOT(deleteLater()));

@@ -24,15 +24,16 @@ AgentApplication::AgentApplication(int argc, char *argv[]) :
     QThread *thread = new QThread;
     m_watcher->moveToThread(thread);
     connect(thread, SIGNAL(started()), m_watcher, SLOT(currentThread()));
+    connect(this, SIGNAL(quitApp()), thread, SLOT(quit()));
     connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
     thread->start();
 
     QThread *secThread = new QThread;
     m_collector->moveToThread(secThread);
     connect(thread, SIGNAL(started()), m_collector, SLOT(currentThread()));
+     connect(this, SIGNAL(quitApp()), secThread, SLOT(quit()));
     connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
     secThread->start();
-
 
 
 
@@ -41,17 +42,19 @@ AgentApplication::AgentApplication(int argc, char *argv[]) :
 
     connect(m_watcher, SIGNAL(timedOut()), m_collector, SLOT(collectAll()));
 
+    connect(m_trayIcon, SIGNAL(quitApplication()), this, SLOT(onQuit()));
+    connect(this, SIGNAL(quitApp()), qApp, SLOT(quit()));
+
 
     qDebug() << "QThread AgentApplication: " << QThread::currentThreadId();
 }
 
 AgentApplication::~AgentApplication()
 {
-    //qDebug() << "~AgentApp";
+    qDebug() << "~AgentApp";
     delete m_trayIcon;
     delete m_watcher;
     delete m_collector;
-    //saveSettings();
 }
 
 QString AgentApplication::journalToString(const AgentApplication::Journal type)
@@ -121,6 +124,11 @@ void AgentApplication::updateSettings()
         setStartup.setValue("Siem", value);
      else
         setStartup.remove("Siem");
+}
+
+void AgentApplication::onQuit()
+{
+    emit quitApp();
 }
 
 void AgentApplication::saveSettings()

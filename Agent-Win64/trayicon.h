@@ -16,6 +16,7 @@ public:
 
 signals:
     void updateSettingNeeded();
+    void quitApplication();
 
 private:
     QSystemTrayIcon *m_trayIcon;
@@ -24,6 +25,7 @@ private:
 private slots:
     void openSettings();
     void undateSettings();
+    void onQuitAction();
 };
 
 #endif // TRAYICON_H

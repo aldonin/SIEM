@@ -65,8 +65,6 @@ void SettingsWidget::saveSettings()
 
     settings.setValue("general/Startup", startUp->isChecked());
 
-
-
     emit settingsSaved();
 }
 

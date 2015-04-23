@@ -31,6 +31,12 @@ public:
 public slots:
     void updateSettings();
 
+private slots:
+    void onQuit();
+
+signals:
+    void quitApp();
+
 private:
     void saveSettings();
     void readSettings();
