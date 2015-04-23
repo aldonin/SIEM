@@ -35,8 +35,8 @@ private:
     void saveSettings();
     void readSettings();
 
-    TrayIcon *m_trayIcon;
-    Watcher *m_watcher;
+    TrayIcon  *m_trayIcon;
+    Watcher   *m_watcher;
     Collector *m_collector;
 };
 

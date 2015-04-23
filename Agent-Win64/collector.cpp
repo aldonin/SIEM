@@ -1,6 +1,7 @@
 #include "collector.h"
 #include <QDebug>
 #include <QThread>
+#include <QSettings>
 
 Collector::Collector(QObject *parent) : QObject(parent)
 {
@@ -22,10 +23,25 @@ Collector::~Collector()
 
 void Collector::collect(const AgentApplication::Journal type)
 {
+    qDebug() << AgentApplication::journalToString(type);
     // FIXME в зависимости от типа
     Q_UNUSED(type)
-    m_prc->start(executeStr);
-    m_prc->waitForFinished();
+    //m_prc->start(executeStr);
+    //m_prc->waitForFinished();
+}
+
+void Collector::collectAll()
+{
+    QSettings settings;
+    settings.beginGroup("monitoredJournals");
+    QStringList keys = settings.childKeys();
+    foreach (QString journalName, keys) {
+        if (settings.value(journalName).toBool())
+            collect( AgentApplication::stringToJournal(journalName) );
+    }
+
+    settings.endGroup();
+
 }
 
 void Collector::currentThread()

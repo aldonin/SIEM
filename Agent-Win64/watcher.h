@@ -25,7 +25,7 @@ public:
 
 public slots:
     void changeMode(const Watcher::Mode mode);
-    void changeInterval(const uint mins);
+    void changeInterval(const int mins);
     void updateSettings();
 
 private slots:
@@ -46,6 +46,7 @@ private:
     QTimer *m_timer;
     Mode m_mode;
     QMap<QString, bool> m_monitoredJournals;
+    int m_timerInterval;
 
 };
 

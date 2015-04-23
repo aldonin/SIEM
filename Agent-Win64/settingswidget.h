@@ -27,6 +27,7 @@ private slots:
     void notifyAllAboutChanges();
     void saveSettings();
     void readSettings();
+    void modeChanged(bool);
 
     //TODO добавить слот на изменения времени, см виджет
 };

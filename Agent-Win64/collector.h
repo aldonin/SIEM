@@ -18,7 +18,10 @@ private:
     QProcess *m_prc;
 
 public slots:
+    // Для определенного типа журнала
     void collect(const AgentApplication::Journal type = AgentApplication::Journal::Application);
+    // Для всех журнала по событию таймера
+    void collectAll();
     void currentThread();
 
     void updateSettings();

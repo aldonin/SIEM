@@ -38,6 +38,10 @@ AgentApplication::AgentApplication(int argc, char *argv[]) :
 
     setQuitOnLastWindowClosed(false);
     connect(m_trayIcon, SIGNAL(updateSettingNeeded()), this, SLOT(updateSettings()));
+
+    connect(m_watcher, SIGNAL(timedOut()), m_collector, SLOT(collectAll()));
+
+
     qDebug() << "QThread AgentApplication: " << QThread::currentThreadId();
 }
 

@@ -23,8 +23,7 @@ SettingsWidget::SettingsWidget(QWidget *parent) :
     connect(applyBtn, SIGNAL(clicked()), this, SLOT(saveSettings()));
 
     connect(this, SIGNAL(settingsSaved()), this, SLOT(notifyAllAboutChanges()));
-
-
+    connect(timedMode, SIGNAL(toggled(bool)), this, SLOT(modeChanged(bool)));
 }
 
 bool SettingsWidget::isCanClose() const
@@ -62,8 +61,11 @@ void SettingsWidget::saveSettings()
     // 0 - timedMode, 1 - fileChangedMode
     int mode = timedMode->isChecked() ? 0 : 1;
     settings.setValue("watcherMode/mode", mode);
+    settings.setValue("watcherMode/timedMode/timeout", minDelay->value());
 
     settings.setValue("general/Startup", startUp->isChecked());
+
+
 
     emit settingsSaved();
 }
@@ -81,8 +83,15 @@ void SettingsWidget::readSettings()
 
     int mode = settings.value("watchedMode/mode").toInt();
     timedMode->setChecked( mode == 0 ? true : false);
+    minDelay->setValue(settings.value("watcherMode/timedMode/timeout", QVariant(1)).toInt());
 
     startUp->setChecked(settings.value("general/Startup").toBool());
+}
+
+void SettingsWidget::modeChanged(bool state)
+{
+    label->setEnabled(state);
+    minDelay->setEnabled(state);
 }
 
 void SettingsWidget::notifyAllAboutChanges()
