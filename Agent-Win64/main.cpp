@@ -10,7 +10,12 @@
 
 int main(int argc, char* argv[])
 {
-   AgentApplication app(argc, argv);
+   //AgentApplication app(argc, argv);
+   QApplication app(argc, argv);
+
+   Collector c;
+   c.collect(AgentApplication::Journal::Application);
+
    return app.exec();
 }
 

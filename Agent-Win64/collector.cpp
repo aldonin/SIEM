@@ -2,6 +2,8 @@
 #include <QDebug>
 #include <QThread>
 #include <QSettings>
+#include <QFile>
+#include <QDateTime>
 
 Collector::Collector(QObject *parent) : QObject(parent)
 {
@@ -23,11 +25,34 @@ Collector::~Collector()
 
 void Collector::collect(const AgentApplication::Journal type)
 {
-    qDebug() << AgentApplication::journalToString(type);
-    // FIXME в зависимости от типа
-    Q_UNUSED(type)
-    //m_prc->start(executeStr);
-    //m_prc->waitForFinished();
+    QDateTime time = QDateTime::currentDateTime();
+    QFile executePS(QString("%1-%2.ps1")
+                    .arg( AgentApplication::journalToString(type) )
+                    .arg( time.toString("dd.MM.yyyy_hh-mm-ss") ));
+
+    qDebug() << QString("%1-%2.ps1")
+                .arg( AgentApplication::journalToString(type) )
+                .arg( time.toString("dd.MM.yyyy_hh:mm:ss") );
+
+    if (!executePS.open(QIODevice::WriteOnly | QIODevice::Text)) {
+        qDebug() << "Can't open file";
+    } else {
+
+        QTextStream out(&executePS);
+
+        // TODO исправить на After
+        out <<  QString("(Get-EventLog -LogName '%1' -Newest %2 |ConvertTo-Xml -noTypeInformation).save(\"%3\") \nGet-Process Powershell | Stop-Process")
+                .arg( AgentApplication::journalToString(type) )
+                .arg( "10" )
+                .arg( "D:\\1.xml" );
+        executePS.close();
+
+        executeStr = QString("cmd /C powershell -NoProfile –ExecutionPolicy Unrestricted –File %1").arg(executePS.fileName());
+
+        m_prc->start(executeStr);
+        m_prc->waitForFinished();
+        qDebug() << executePS.remove();
+    }
 }
 
 void Collector::collectAll()

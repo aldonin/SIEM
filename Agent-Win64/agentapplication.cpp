@@ -40,7 +40,8 @@ AgentApplication::AgentApplication(int argc, char *argv[]) :
     setQuitOnLastWindowClosed(false);
     connect(m_trayIcon, SIGNAL(updateSettingNeeded()), this, SLOT(updateSettings()));
 
-    connect(m_watcher, SIGNAL(timedOut()), m_collector, SLOT(collectAll()));
+    //FIXME разконеектить. Сделал чтобы протестить
+    //connect(m_watcher, SIGNAL(timedOut()), m_collector, SLOT(collectAll()));
 
     connect(m_trayIcon, SIGNAL(quitApplication()), this, SLOT(onQuit()));
     connect(this, SIGNAL(quitApp()), qApp, SLOT(quit()));
