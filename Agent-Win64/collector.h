@@ -14,8 +14,12 @@ public:
     ~Collector();
 
 private:
+    void saveSettings();
+
+private:
     QString executeStr;
     QProcess *m_prc;
+    QMap<AgentApplication::Journal, QDateTime> m_lastTimeCollect;
 
 public slots:
     // Для определенного типа журнала

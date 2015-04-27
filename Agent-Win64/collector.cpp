@@ -10,6 +10,7 @@ Collector::Collector(QObject *parent) : QObject(parent)
     m_prc = new QProcess;
     executeStr = "cmd /C powershell -NoProfile –ExecutionPolicy Unrestricted –File D:/1.ps1";
 
+    updateSettings();
     //connect(m_prc, SIGNAL(finished(int)), m_prc, SLOT(deleteLater()));
 
    // prc->start(executeStr);
@@ -20,7 +21,20 @@ Collector::Collector(QObject *parent) : QObject(parent)
 Collector::~Collector()
 {
     qDebug() << "~Collector";
+    saveSettings();
     delete m_prc;
+}
+
+void Collector::saveSettings()
+{
+    QSettings settings;
+    settings.beginGroup("monitoredJournals/lastTimeCollect");
+    QMapIterator<AgentApplication::Journal, QDateTime> it(m_lastTimeCollect);
+    while (it.hasNext()) {
+        it.next();
+        settings.setValue(AgentApplication::journalToString(it.key()), it.value().toString("dd.MM.yyyy_hh:mm:ss"));
+    }
+    settings.endGroup();
 }
 
 void Collector::collect(const AgentApplication::Journal type)
@@ -61,8 +75,10 @@ void Collector::collectAll()
     settings.beginGroup("monitoredJournals");
     QStringList keys = settings.childKeys();
     foreach (QString journalName, keys) {
-        if (settings.value(journalName).toBool())
+        if (settings.value(journalName).toBool()) {
             collect( AgentApplication::stringToJournal(journalName) );
+            m_lastTimeCollect.insert(AgentApplication::stringToJournal(journalName), QDateTime::currentDateTime());
+        }
     }
 
     settings.endGroup();
@@ -76,6 +92,14 @@ void Collector::currentThread()
 
 void Collector::updateSettings()
 {
-    // TODO брать настройки из QSettings
+    QSettings settings;
+    settings.beginGroup("monitoredJournals/lastTimeCollect");
+    QStringList keys = settings.childKeys();
+    foreach (QString journalName, keys) {
+        m_lastTimeCollect.insert( AgentApplication::stringToJournal(journalName),
+                                  settings.value(journalName).toDateTime() );
+    }
+
+    settings.endGroup();
 }
 

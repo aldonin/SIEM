@@ -18,7 +18,7 @@ int main(int argc, char* argv[])
 
    return app.exec();
 }
-
+// FIXME Если журнал пуст - то ps ничего не возвращает и не создает файла
 
 /**
 

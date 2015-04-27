@@ -3,6 +3,7 @@
 #include <QDir>
 #include <QDebug>
 
+
 QString JournalFinder::path(AgentApplication::Journal type)
 {
     bool ok = false;
