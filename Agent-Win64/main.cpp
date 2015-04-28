@@ -10,22 +10,9 @@
 
 int main(int argc, char* argv[])
 {
-   //AgentApplication app(argc, argv);
-   QApplication app(argc, argv);
-
-   Collector c;
-   c.collect(AgentApplication::Journal::Application);
+   AgentApplication app(argc, argv);
 
    return app.exec();
 }
 // FIXME Если журнал пуст - то ps ничего не возвращает и не создает файла
 
-/**
-
-  Содержимое скрипта
- *  (Get-EventLog -LogName 'Application' -Newest 13 |ConvertTo-Xml -noTypeInformation).save("D:\testNoType.xml")
-     Get-Process Powershell | Stop-Process
-
- *
- *
-*/

@@ -60,8 +60,8 @@ void SettingsWidget::saveSettings()
 
     // 0 - timedMode, 1 - fileChangedMode
     int mode = timedMode->isChecked() ? 0 : 1;
-    settings.setValue("watcherMode/mode", mode);
-    settings.setValue("watcherMode/timedMode/timeout", minDelay->value());
+    settings.setValue("watchedMode/mode", mode);
+    settings.setValue("watchedMode/timedMode/timeout", minDelay->value());
 
     settings.setValue("general/Startup", startUp->isChecked());
 
@@ -72,6 +72,7 @@ void SettingsWidget::readSettings()
 {
     QSettings settings;
     settings.beginGroup("monitoredJournals");
+
     appBox->setChecked(settings.value("Application").toBool());
     secBox->setChecked(settings.value("Security").toBool());
     setupBox->setChecked(settings.value("Setup").toBool());
@@ -80,8 +81,8 @@ void SettingsWidget::readSettings()
     settings.endGroup();
 
     int mode = settings.value("watchedMode/mode").toInt();
-    timedMode->setChecked( mode == 0 ? true : false);
-    minDelay->setValue(settings.value("watcherMode/timedMode/timeout", QVariant(1)).toInt());
+    mode == 0 ? timedMode->setChecked(true) : fileChangeMode->setChecked(true);
+    minDelay->setValue(settings.value("watchedMode/timedMode/timeout", QVariant(1)).toInt());
 
     startUp->setChecked(settings.value("general/Startup").toBool());
 }

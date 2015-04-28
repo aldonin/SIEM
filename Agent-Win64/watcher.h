@@ -24,20 +24,21 @@ public:
     uint interval() const;
 
 public slots:
-    void changeMode(const Watcher::Mode mode);
-    void changeInterval(const int mins);
+    // Необходимо инициализация таймера в потоке, в котором он будет работать, иначе ловлю ошибку Timers cannot be stopped from another thread
+    void initTimerAtCurrentThread();
     void updateSettings();
 
 private slots:
     void journalChange(const QString &path);
     void currentThread();
+    void changeMode(const Watcher::Mode mode);
+    void changeInterval(const int mins);
 
 signals:
     void journalChange(AgentApplication::Journal);
     void timedOut();
 
 private slots:
-    void debugInfo();
     void timeToCollect();
 
 

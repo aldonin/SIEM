@@ -9,7 +9,7 @@
 AgentApplication::AgentApplication(int argc, char *argv[]) :
     QApplication(argc, argv)
 {
-    QCoreApplication::setApplicationName("SIEM Agent-Win64");
+    QCoreApplication::setApplicationName("Agent-Win64");
     QCoreApplication::setOrganizationName("LETI");
     QCoreApplication::setOrganizationDomain("eltech.ru");
     QCoreApplication::setApplicationVersion("0.1");
@@ -24,14 +24,18 @@ AgentApplication::AgentApplication(int argc, char *argv[]) :
     QThread *thread = new QThread;
     m_watcher->moveToThread(thread);
     connect(thread, SIGNAL(started()), m_watcher, SLOT(currentThread()));
+    connect(thread, SIGNAL(started()), m_watcher, SLOT(initTimerAtCurrentThread()));
+    connect(thread, SIGNAL(finished()), m_watcher, SLOT(deleteLater()));
     connect(this, SIGNAL(quitApp()), thread, SLOT(quit()));
     connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
     thread->start();
 
+
     QThread *secThread = new QThread;
     m_collector->moveToThread(secThread);
     connect(thread, SIGNAL(started()), m_collector, SLOT(currentThread()));
-     connect(this, SIGNAL(quitApp()), secThread, SLOT(quit()));
+    connect(this, SIGNAL(quitApp()), secThread, SLOT(quit()));
+    connect(thread, SIGNAL(finished()), m_collector, SLOT(deleteLater()));
     connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
     secThread->start();
 
@@ -39,9 +43,10 @@ AgentApplication::AgentApplication(int argc, char *argv[]) :
 
     setQuitOnLastWindowClosed(false);
     connect(m_trayIcon, SIGNAL(updateSettingNeeded()), this, SLOT(updateSettings()));
+    connect(m_trayIcon, SIGNAL(updateSettingNeeded()), m_watcher, SLOT(updateSettings()));
+    connect(m_trayIcon, SIGNAL(updateSettingNeeded()), m_collector, SLOT(updateSettings()));
 
-    //FIXME разконеектить. Сделал чтобы протестить
-    //connect(m_watcher, SIGNAL(timedOut()), m_collector, SLOT(collectAll()));
+    connect(m_watcher, SIGNAL(timedOut()), m_collector, SLOT(collectAll()));
 
     connect(m_trayIcon, SIGNAL(quitApplication()), this, SLOT(onQuit()));
     connect(this, SIGNAL(quitApp()), qApp, SLOT(quit()));
@@ -54,8 +59,6 @@ AgentApplication::~AgentApplication()
 {
     qDebug() << "~AgentApp";
     delete m_trayIcon;
-    delete m_watcher;
-    delete m_collector;
 }
 
 QString AgentApplication::journalToString(const AgentApplication::Journal type)
@@ -121,7 +124,7 @@ void AgentApplication::updateSettings()
     QString value = AgentApplication::applicationFilePath();
     value.replace(QRegExp("/"), "\\");
 
-    if (isStartup)
+    if ( isStartup )
         setStartup.setValue("Siem", value);
      else
         setStartup.remove("Siem");
@@ -130,14 +133,5 @@ void AgentApplication::updateSettings()
 void AgentApplication::onQuit()
 {
     emit quitApp();
-}
-
-void AgentApplication::saveSettings()
-{
-}
-
-void AgentApplication::readSettings()
-{
-
 }
 

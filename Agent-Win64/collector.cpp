@@ -4,25 +4,19 @@
 #include <QSettings>
 #include <QFile>
 #include <QDateTime>
+#include <QProcess>
 
 Collector::Collector(QObject *parent) : QObject(parent)
 {
-    m_prc = new QProcess;
     executeStr = "cmd /C powershell -NoProfile –ExecutionPolicy Unrestricted –File D:/1.ps1";
 
     updateSettings();
-    //connect(m_prc, SIGNAL(finished(int)), m_prc, SLOT(deleteLater()));
-
-   // prc->start(executeStr);
-
-   // prc->waitForFinished();
 }
 
 Collector::~Collector()
 {
     qDebug() << "~Collector";
     saveSettings();
-    delete m_prc;
 }
 
 void Collector::saveSettings()
@@ -32,21 +26,17 @@ void Collector::saveSettings()
     QMapIterator<AgentApplication::Journal, QDateTime> it(m_lastTimeCollect);
     while (it.hasNext()) {
         it.next();
-        settings.setValue(AgentApplication::journalToString(it.key()), it.value().toString("dd.MM.yyyy_hh:mm:ss"));
+        settings.setValue(AgentApplication::journalToString(it.key()), it.value().toString("dd.MM.yyyy hh:mm:ss"));
     }
     settings.endGroup();
 }
 
 void Collector::collect(const AgentApplication::Journal type)
 {
-    QDateTime time = QDateTime::currentDateTime();
+    QDateTime curTime = QDateTime::currentDateTime();
     QFile executePS(QString("%1-%2.ps1")
                     .arg( AgentApplication::journalToString(type) )
-                    .arg( time.toString("dd.MM.yyyy_hh-mm-ss") ));
-
-    qDebug() << QString("%1-%2.ps1")
-                .arg( AgentApplication::journalToString(type) )
-                .arg( time.toString("dd.MM.yyyy_hh:mm:ss") );
+                    .arg( curTime.toString("dd.MM.yyyy_hh-mm-ss") ));
 
     if (!executePS.open(QIODevice::WriteOnly | QIODevice::Text)) {
         qDebug() << "Can't open file";
@@ -54,18 +44,25 @@ void Collector::collect(const AgentApplication::Journal type)
 
         QTextStream out(&executePS);
 
-        // TODO исправить на After
-        out <<  QString("(Get-EventLog -LogName '%1' -Newest %2 |ConvertTo-Xml -noTypeInformation).save(\"%3\") \nGet-Process Powershell | Stop-Process")
+        QDateTime lastTimeUpdate = m_lastTimeCollect.value(type, curTime);
+
+        QString xmlFileName = QString("%1-%2.xml")
                 .arg( AgentApplication::journalToString(type) )
-                .arg( "10" )
-                .arg( "D:\\1.xml" );
+                .arg( curTime.toString("dd.MM.yyyy_hh-mm-ss") );
+
+        out <<  QString("(Get-EventLog -LogName '%1' -After '%2' |ConvertTo-Xml -noTypeInformation).save(\"%3\") \nGet-Process Powershell | Stop-Process")
+                .arg( AgentApplication::journalToString(type) )
+                .arg( lastTimeUpdate.toString("dd.MM.yyyy hh:mm:ss") )
+                .arg( xmlFileName );
+
         executePS.close();
 
         executeStr = QString("cmd /C powershell -NoProfile –ExecutionPolicy Unrestricted –File %1").arg(executePS.fileName());
 
-        m_prc->start(executeStr);
-        m_prc->waitForFinished();
-        qDebug() << executePS.remove();
+        QProcess prc;
+        prc.start(executeStr);
+        prc.waitForFinished();
+        //qDebug() << executePS.remove();
     }
 }
 
@@ -82,7 +79,6 @@ void Collector::collectAll()
     }
 
     settings.endGroup();
-
 }
 
 void Collector::currentThread()
@@ -93,13 +89,15 @@ void Collector::currentThread()
 void Collector::updateSettings()
 {
     QSettings settings;
+
     settings.beginGroup("monitoredJournals/lastTimeCollect");
     QStringList keys = settings.childKeys();
     foreach (QString journalName, keys) {
-        m_lastTimeCollect.insert( AgentApplication::stringToJournal(journalName),
-                                  settings.value(journalName).toDateTime() );
+        QDateTime settingsDate = QDateTime::fromString(settings.value(journalName).toString(), "dd.MM.yyyy hh:mm:ss");
+        if ( settingsDate > m_lastTimeCollect.value(AgentApplication::stringToJournal(journalName), QDateTime::fromString("01.01.1990 00:00", "dd.MM.yyyy hh:mm")) ) {
+            m_lastTimeCollect.insert( AgentApplication::stringToJournal(journalName), settingsDate );
+        }
     }
-
     settings.endGroup();
 }
 
