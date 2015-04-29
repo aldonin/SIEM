@@ -33,10 +33,10 @@ AgentApplication::AgentApplication(int argc, char *argv[]) :
 
     QThread *secThread = new QThread;
     m_collector->moveToThread(secThread);
-    connect(thread, SIGNAL(started()), m_collector, SLOT(currentThread()));
+    connect(secThread, SIGNAL(started()), m_collector, SLOT(currentThread()));
+    connect(secThread, SIGNAL(finished()), m_collector, SLOT(deleteLater()));
     connect(this, SIGNAL(quitApp()), secThread, SLOT(quit()));
-    connect(thread, SIGNAL(finished()), m_collector, SLOT(deleteLater()));
-    connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
+    connect(secThread, SIGNAL(finished()), secThread, SLOT(deleteLater()));
     secThread->start();
 
 

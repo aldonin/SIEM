@@ -5,12 +5,18 @@
 #include "watcher.h"
 #include "journalfinder.h"
 
+#include <QFile>
+
 
 #include <QDebug>
 
 int main(int argc, char* argv[])
 {
-   AgentApplication app(argc, argv);
+   //QApplication app(argc, argv);
+    AgentApplication app(argc, argv);
+
+   //QFile file("Application-29.04.2015_17-49-28.xml");
+   //qDebug() << file.exists();
 
    return app.exec();
 }

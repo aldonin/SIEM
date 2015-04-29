@@ -1,9 +1,10 @@
 #include "settingswidget.h"
 #include <QCloseEvent>
 #include <QSettings>
-
-
 #include <QDebug>
+
+#define DEFAULT_HOST_NAME "localhost"
+#define DEFAULT_PORT 2323
 
 
 SettingsWidget::SettingsWidget(QWidget *parent) :
@@ -24,6 +25,8 @@ SettingsWidget::SettingsWidget(QWidget *parent) :
 
     connect(this, SIGNAL(settingsSaved()), this, SLOT(notifyAllAboutChanges()));
     connect(timedMode, SIGNAL(toggled(bool)), this, SLOT(modeChanged(bool)));
+
+    connect(defaultServerBtn, SIGNAL(clicked()), this, SLOT(defaultServerBtnClicked()));
 }
 
 bool SettingsWidget::isCanClose() const
@@ -65,14 +68,19 @@ void SettingsWidget::saveSettings()
 
     settings.setValue("general/Startup", startUp->isChecked());
 
+    settings.beginGroup("server");
+    settings.setValue("host", hostEdit->text());
+    settings.setValue("port", portEdit->text().toUInt());
+    settings.endGroup();
+
     emit settingsSaved();
 }
 
 void SettingsWidget::readSettings()
 {
     QSettings settings;
-    settings.beginGroup("monitoredJournals");
 
+    settings.beginGroup("monitoredJournals");
     appBox->setChecked(settings.value("Application").toBool());
     secBox->setChecked(settings.value("Security").toBool());
     setupBox->setChecked(settings.value("Setup").toBool());
@@ -85,12 +93,23 @@ void SettingsWidget::readSettings()
     minDelay->setValue(settings.value("watchedMode/timedMode/timeout", QVariant(1)).toInt());
 
     startUp->setChecked(settings.value("general/Startup").toBool());
+
+    settings.beginGroup("server");
+    hostEdit->setText( settings.value("host", QVariant(DEFAULT_HOST_NAME)).toString() );
+    portEdit->setText( QString::number( settings.value("port", QVariant(DEFAULT_PORT)).toUInt() ) );
+    settings.endGroup();
 }
 
 void SettingsWidget::modeChanged(bool state)
 {
     label->setEnabled(state);
     minDelay->setEnabled(state);
+}
+
+void SettingsWidget::defaultServerBtnClicked()
+{
+    hostEdit->setText(DEFAULT_HOST_NAME);
+    portEdit->setText(QString::number(DEFAULT_PORT));
 }
 
 void SettingsWidget::notifyAllAboutChanges()

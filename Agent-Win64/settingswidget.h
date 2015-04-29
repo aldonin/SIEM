@@ -28,6 +28,7 @@ private slots:
     void saveSettings();
     void readSettings();
     void modeChanged(bool);
+    void defaultServerBtnClicked();
 };
 
 #endif // SETTINGSWIDGET_H

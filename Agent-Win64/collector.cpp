@@ -6,6 +6,8 @@
 #include <QDateTime>
 #include <QProcess>
 
+#include "filesender.h"
+
 Collector::Collector(QObject *parent) : QObject(parent)
 {
     executeStr = "cmd /C powershell -NoProfile –ExecutionPolicy Unrestricted –File D:/1.ps1";
@@ -62,7 +64,20 @@ void Collector::collect(const AgentApplication::Journal type)
         QProcess prc;
         prc.start(executeStr);
         prc.waitForFinished();
+        // TODO remove this
+        // TODO также надо xml файл удалять после отправки
         //qDebug() << executePS.remove();
+
+        FileSender *sender = new FileSender(xmlFileName);
+        QThread *thread = new QThread;
+        sender->moveToThread(thread);
+
+        connect(thread, SIGNAL(started()), sender, SLOT(send()));
+        connect(sender, SIGNAL(finished()), thread, SLOT(quit()));
+        connect(sender, SIGNAL(finished()), sender, SLOT(deleteLater()));
+        connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
+
+        thread->start();
     }
 }
 

@@ -1,4 +1,4 @@
-QT += widgets
+QT += widgets network
 CONFIG   += c++11
 
 SOURCES += \
@@ -8,7 +8,8 @@ SOURCES += \
     settingswidget.cpp \
     collector.cpp \
     watcher.cpp \
-    journalfinder.cpp
+    journalfinder.cpp \
+    filesender.cpp
 
 HEADERS += \
     agentapplication.h \
@@ -16,7 +17,8 @@ HEADERS += \
     settingswidget.h \
     collector.h \
     watcher.h \
-    journalfinder.h
+    journalfinder.h \
+    filesender.h
 
 RESOURCES += \
     icons/icons.qrc
