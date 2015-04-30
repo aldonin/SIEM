@@ -64,15 +64,15 @@ void Collector::collect(const AgentApplication::Journal type)
         QProcess prc;
         prc.start(executeStr);
         prc.waitForFinished();
-        // TODO remove this
-        // TODO также надо xml файл удалять после отправки
-        //qDebug() << executePS.remove();
+
+        // Remove PS script file
+        executePS.remove();
 
         FileSender *sender = new FileSender(xmlFileName);
         QThread *thread = new QThread;
         sender->moveToThread(thread);
 
-        connect(thread, SIGNAL(started()), sender, SLOT(send()));
+        connect(thread, SIGNAL(started()),  sender, SLOT(send()));
         connect(sender, SIGNAL(finished()), thread, SLOT(quit()));
         connect(sender, SIGNAL(finished()), sender, SLOT(deleteLater()));
         connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));

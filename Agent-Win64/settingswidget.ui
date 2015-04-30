@@ -113,6 +113,9 @@
          <property name="movement">
           <enum>QListView::Static</enum>
          </property>
+         <property name="spacing">
+          <number>2</number>
+         </property>
          <property name="viewMode">
           <enum>QListView::ListMode</enum>
          </property>
@@ -139,7 +142,7 @@
           </property>
           <property name="icon">
            <iconset resource="icons/icons.qrc">
-            <normaloff>:/agent.png</normaloff>:/agent.png</iconset>
+            <normaloff>:/general.png</normaloff>:/general.png</iconset>
           </property>
          </item>
          <item>
@@ -148,7 +151,7 @@
           </property>
           <property name="icon">
            <iconset resource="icons/icons.qrc">
-            <normaloff>:/agent.png</normaloff>:/agent.png</iconset>
+            <normaloff>:/mode.png</normaloff>:/mode.png</iconset>
           </property>
          </item>
          <item>
@@ -157,7 +160,7 @@
           </property>
           <property name="icon">
            <iconset resource="icons/icons.qrc">
-            <normaloff>:/agent.png</normaloff>:/agent.png</iconset>
+            <normaloff>:/log.png</normaloff>:/log.png</iconset>
           </property>
          </item>
          <item>
@@ -166,7 +169,16 @@
           </property>
           <property name="icon">
            <iconset resource="icons/icons.qrc">
-            <normaloff>:/agent.png</normaloff>:/agent.png</iconset>
+            <normaloff>:/server.png</normaloff>:/server.png</iconset>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>PowerShell</string>
+          </property>
+          <property name="icon">
+           <iconset resource="icons/icons.qrc">
+            <normaloff>:/powershell.png</normaloff>:/powershell.png</iconset>
           </property>
          </item>
         </widget>
@@ -198,7 +210,7 @@
         </sizepolicy>
        </property>
        <property name="currentIndex">
-        <number>3</number>
+        <number>4</number>
        </property>
        <widget class="QWidget" name="page">
         <layout class="QVBoxLayout" name="verticalLayout">
@@ -540,6 +552,56 @@
                 <size>
                  <width>20</width>
                  <height>214</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+            </layout>
+           </widget>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QWidget" name="page_5">
+        <layout class="QVBoxLayout" name="verticalLayout_18">
+         <item>
+          <widget class="QTabWidget" name="tabWidget_5">
+           <property name="currentIndex">
+            <number>0</number>
+           </property>
+           <widget class="QWidget" name="tab_4">
+            <attribute name="title">
+             <string>Shell</string>
+            </attribute>
+            <layout class="QVBoxLayout" name="verticalLayout_17">
+             <item>
+              <widget class="QGroupBox" name="groupBox_4">
+               <property name="title">
+                <string>Execution PS parameter</string>
+               </property>
+               <layout class="QVBoxLayout" name="verticalLayout_16">
+                <item>
+                 <widget class="QLabel" name="label_4">
+                  <property name="text">
+                   <string>If you have no idea what it is mean, please, don't modyfied this line</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QLineEdit" name="lineEdit"/>
+                </item>
+               </layout>
+              </widget>
+             </item>
+             <item>
+              <spacer name="verticalSpacer_7">
+               <property name="orientation">
+                <enum>Qt::Vertical</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>20</width>
+                 <height>256</height>
                 </size>
                </property>
               </spacer>

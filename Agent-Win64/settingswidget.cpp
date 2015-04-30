@@ -17,14 +17,14 @@ SettingsWidget::SettingsWidget(QWidget *parent) :
     connect(listWidget, SIGNAL(currentRowChanged(int)), stackedWidget, SLOT(setCurrentIndex(int)));   
     connect(listWidget, SIGNAL(currentTextChanged(QString)), categoryName, SLOT(setText(QString)));
 
-    connect(cancelBtn, SIGNAL(clicked()), this, SLOT(readSettings()));
+    connect(cancelBtn,  SIGNAL(clicked()), this, SLOT(readSettings()));
     connect(cancelBtn,  SIGNAL(clicked()), this, SLOT(close()));
-    connect(okBtn, SIGNAL(clicked()), this, SLOT(saveSettings()));
-    connect(okBtn, SIGNAL(clicked()), this, SLOT(close()));
-    connect(applyBtn, SIGNAL(clicked()), this, SLOT(saveSettings()));
+    connect(okBtn,      SIGNAL(clicked()), this, SLOT(saveSettings()));
+    connect(okBtn,      SIGNAL(clicked()), this, SLOT(close()));
+    connect(applyBtn,   SIGNAL(clicked()), this, SLOT(saveSettings()));
 
-    connect(this, SIGNAL(settingsSaved()), this, SLOT(notifyAllAboutChanges()));
-    connect(timedMode, SIGNAL(toggled(bool)), this, SLOT(modeChanged(bool)));
+    connect(this,       SIGNAL(settingsSaved()), this, SLOT(notifyAllAboutChanges()));
+    connect(timedMode,  SIGNAL(toggled(bool)),   this, SLOT(modeChanged(bool)));
 
     connect(defaultServerBtn, SIGNAL(clicked()), this, SLOT(defaultServerBtnClicked()));
 }

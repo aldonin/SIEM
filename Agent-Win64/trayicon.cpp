@@ -15,7 +15,6 @@ TrayIcon::TrayIcon()
 
     menu->addAction(tr("Settings"), this, SLOT(openSettings()));
     menu->addSeparator();
-    //menu->addAction(tr("Exit"), qApp, SLOT(quit()));
     menu->addAction(tr("Exit"), this, SLOT(onQuitAction()));
 
     m_trayIcon->setContextMenu(menu);
