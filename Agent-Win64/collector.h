@@ -18,6 +18,8 @@ private:
 private:
     QString executeStr;
     QMap<AgentApplication::Journal, QDateTime> m_lastTimeCollect;
+    QString m_psScriptTempFolder;
+    QString m_xmlTempFolder;
 
 public slots:
     // Для определенного типа журнала
@@ -28,6 +30,9 @@ public slots:
     void currentThread();
 
     void updateSettings();
+
+private slots:
+    void removeXmlFile(const QString &fileName);
 };
 
 #endif // COLLECTOR_H

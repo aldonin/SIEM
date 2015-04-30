@@ -43,6 +43,4 @@ private:
     Collector *m_collector;
 };
 
-// TODO добавить трансляторы
-
 #endif // AGENTAPPLICATION_H

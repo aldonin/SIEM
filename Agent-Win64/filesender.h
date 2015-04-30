@@ -13,7 +13,7 @@ public:
     ~FileSender();
 
 signals:
-    void finished();
+    void finished(const QString &fileName);
 
 public slots:
     void send();

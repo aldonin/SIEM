@@ -4,8 +4,7 @@
 #include <QTimer>
 #include <QSettings>
 
-#define SECOND_PER_MINUTE 60
-#define MSEC_PER_SECOND 1000
+#include "globalnamespace.h"
 
 Watcher::Watcher(QObject *parent) : QObject(parent)
 {
@@ -23,7 +22,6 @@ Watcher::~Watcher()
     if (m_timer->isActive())
         m_timer->stop();
     delete m_timer;
-    qDebug() << "~wathcher" <<QThread::currentThread();
     m_monitoredJournals.clear();
 }
 
@@ -34,7 +32,6 @@ uint Watcher::interval() const
 
 void Watcher::initTimerAtCurrentThread()
 {
-    qDebug() << "Init" <<QThread::currentThread();
     m_timer = new QTimer;
     updateSettings();
     connect(m_timer, SIGNAL(timeout()), this, SLOT(timeToCollect()));
@@ -75,14 +72,14 @@ void Watcher::updateSettings()
 
     settings.endGroup();
 
-    int mode = settings.value("watchedMode/mode").toInt();\
+    int mode = settings.value("watchedMode/mode").toInt();
 
     /*
      * При инициализации таймера всегда сначала задаем ему таймаут, а только потом проверяем мод.
      * Ибо если сначала проверять мод, то при значение не совпадаюшем с текущим таймером каждый раз
      * будет происходить его лишний перезапуск.
      */
-    changeInterval( settings.value("watchedMode/timedMode/timeout", QVariant(1)).toInt() );
+    changeInterval( settings.value("watchedMode/timedMode/timeout", QVariant(DEFAULT_TIMER_TIMEOUT)).toInt() );
 
     changeMode( mode == 0 ? Mode::Timed : Mode::FileChanged );
 }
@@ -97,6 +94,6 @@ void Watcher::journalChange(const QString &path)
 
 void Watcher::currentThread()
 {
-    qDebug() << "QThread wather: " << QThread::currentThreadId();
+    qDebug() << "QThread watcher from currentThread(): " << QThread::currentThreadId();
 }
 

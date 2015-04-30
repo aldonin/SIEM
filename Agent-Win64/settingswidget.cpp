@@ -2,10 +2,10 @@
 #include <QCloseEvent>
 #include <QSettings>
 #include <QDebug>
+#include <QDir>
+#include <QFileDialog>
 
-#define DEFAULT_HOST_NAME "localhost"
-#define DEFAULT_PORT 2323
-
+#include "globalnamespace.h"
 
 SettingsWidget::SettingsWidget(QWidget *parent) :
     QWidget(parent), m_isCanClose(false)
@@ -14,19 +14,34 @@ SettingsWidget::SettingsWidget(QWidget *parent) :
 
     readSettings();
 
+    // Переключение между элементами меню настройки
     connect(listWidget, SIGNAL(currentRowChanged(int)), stackedWidget, SLOT(setCurrentIndex(int)));   
     connect(listWidget, SIGNAL(currentTextChanged(QString)), categoryName, SLOT(setText(QString)));
 
+    // Глобальные кнопки Сохранить, Отменить, Применить
     connect(cancelBtn,  SIGNAL(clicked()), this, SLOT(readSettings()));
     connect(cancelBtn,  SIGNAL(clicked()), this, SLOT(close()));
     connect(okBtn,      SIGNAL(clicked()), this, SLOT(saveSettings()));
     connect(okBtn,      SIGNAL(clicked()), this, SLOT(close()));
     connect(applyBtn,   SIGNAL(clicked()), this, SLOT(saveSettings()));
 
+    // Оповещение о изменении настроек
     connect(this,       SIGNAL(settingsSaved()), this, SLOT(notifyAllAboutChanges()));
+
+    // Изменение режима работы, активация ввода времени
     connect(timedMode,  SIGNAL(toggled(bool)),   this, SLOT(modeChanged(bool)));
 
+    // Задание дефолтных настроек локации сервера и параметров запроса PS
     connect(defaultServerBtn, SIGNAL(clicked()), this, SLOT(defaultServerBtnClicked()));
+    connect(defaultShellBtn, SIGNAL(clicked()), this, SLOT(defaultShellBtnClicked()));
+
+    // Выбор папок для хранения временных файлов
+    connect(psScriptBrowseFolderBtn, SIGNAL(clicked()), this, SLOT(choseFolderClicked()));
+    connect(xmlBrowseFolderBtn,      SIGNAL(clicked()), this, SLOT(choseFolderClicked()));
+
+    // Сбросить папки для хранения файлов на дефолтные
+    connect(psScriptResetFolderBtn, SIGNAL(clicked()), this, SLOT(resetFolderClicked()));
+    connect(xmlResetFolderBtn,      SIGNAL(clicked()), this, SLOT(resetFolderClicked()));
 }
 
 bool SettingsWidget::isCanClose() const
@@ -73,6 +88,13 @@ void SettingsWidget::saveSettings()
     settings.setValue("port", portEdit->text().toUInt());
     settings.endGroup();
 
+    settings.setValue("PowerShell/executeParams", shellEdit->text().simplified());
+
+    settings.beginGroup("Path");
+    settings.setValue("PSScriptTemporary", psScriptFolderEdit->text());
+    settings.setValue("XmlTemporary", xmlFolderEdit->text());
+    settings.endGroup();
+
     emit settingsSaved();
 }
 
@@ -90,13 +112,20 @@ void SettingsWidget::readSettings()
 
     int mode = settings.value("watchedMode/mode").toInt();
     mode == 0 ? timedMode->setChecked(true) : fileChangeMode->setChecked(true);
-    minDelay->setValue(settings.value("watchedMode/timedMode/timeout", QVariant(1)).toInt());
+    minDelay->setValue(settings.value("watchedMode/timedMode/timeout", QVariant(DEFAULT_TIMER_TIMEOUT)).toInt());
 
     startUp->setChecked(settings.value("general/Startup").toBool());
 
     settings.beginGroup("server");
     hostEdit->setText( settings.value("host", QVariant(DEFAULT_HOST_NAME)).toString() );
     portEdit->setText( QString::number( settings.value("port", QVariant(DEFAULT_PORT)).toUInt() ) );
+    settings.endGroup();
+
+    shellEdit->setText( settings.value("PowerShell/executeParams", QVariant(DEFAULT_SHELL_PARAM)).toString() );
+
+    settings.beginGroup("Path");
+    psScriptFolderEdit->setText( settings.value("PSScriptTemporary", QVariant(QCoreApplication::applicationDirPath() + "/" + DEFAULT_FOLDER_PSSCRIPT_TEMPORARY)).toString() );
+    xmlFolderEdit->setText(      settings.value("XmlTemporary",      QVariant(QCoreApplication::applicationDirPath() + "/" + DEFAULT_FOLDER_XML_TEMPORARY)).toString() );
     settings.endGroup();
 }
 
@@ -110,6 +139,46 @@ void SettingsWidget::defaultServerBtnClicked()
 {
     hostEdit->setText(DEFAULT_HOST_NAME);
     portEdit->setText(QString::number(DEFAULT_PORT));
+}
+
+void SettingsWidget::defaultShellBtnClicked()
+{
+    shellEdit->setText(DEFAULT_SHELL_PARAM);
+}
+
+void SettingsWidget::choseFolderClicked()
+{
+    QString dir = QFileDialog::getExistingDirectory(this,
+                                                    tr("Chose Directory"),
+                                                    QCoreApplication::applicationDirPath(),
+                                                    QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
+
+    if (dir.isEmpty())
+        return;
+
+    QPushButton *btn = dynamic_cast<QPushButton*>(sender());
+
+    if ( btn->objectName() == "xmlBrowseFolderBtn" )
+        xmlFolderEdit->setText(dir);
+    else
+        psScriptFolderEdit->setText(dir);
+}
+
+void SettingsWidget::resetFolderClicked()
+{
+    QPushButton *btn = dynamic_cast<QPushButton*>(sender());
+
+    if  ( btn->objectName() == "xmlResetFolderBtn" ) {
+        if (!QDir(DEFAULT_FOLDER_XML_TEMPORARY).exists())
+            QDir().mkdir(DEFAULT_FOLDER_XML_TEMPORARY);
+
+        xmlFolderEdit->setText( QCoreApplication::applicationDirPath() + "/" + DEFAULT_FOLDER_XML_TEMPORARY );
+    } else {
+        if (!QDir(DEFAULT_FOLDER_PSSCRIPT_TEMPORARY).exists())
+            QDir().mkdir(DEFAULT_FOLDER_PSSCRIPT_TEMPORARY);
+
+        psScriptFolderEdit->setText( QCoreApplication::applicationDirPath() + "/" + DEFAULT_FOLDER_PSSCRIPT_TEMPORARY );
+    }
 }
 
 void SettingsWidget::notifyAllAboutChanges()

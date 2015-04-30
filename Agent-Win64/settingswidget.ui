@@ -6,13 +6,13 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>640</width>
+    <width>720</width>
     <height>480</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
-    <width>640</width>
+    <width>720</width>
     <height>480</height>
    </size>
   </property>
@@ -114,7 +114,7 @@
           <enum>QListView::Static</enum>
          </property>
          <property name="spacing">
-          <number>2</number>
+          <number>0</number>
          </property>
          <property name="viewMode">
           <enum>QListView::ListMode</enum>
@@ -129,7 +129,7 @@
           <bool>true</bool>
          </property>
          <property name="currentRow">
-          <number>-1</number>
+          <number>0</number>
          </property>
          <item>
           <property name="text">
@@ -181,6 +181,15 @@
             <normaloff>:/powershell.png</normaloff>:/powershell.png</iconset>
           </property>
          </item>
+         <item>
+          <property name="text">
+           <string>Path</string>
+          </property>
+          <property name="icon">
+           <iconset resource="icons/icons.qrc">
+            <normaloff>:/folder.png</normaloff>:/folder.png</iconset>
+          </property>
+         </item>
         </widget>
        </item>
        <item>
@@ -210,7 +219,7 @@
         </sizepolicy>
        </property>
        <property name="currentIndex">
-        <number>4</number>
+        <number>0</number>
        </property>
        <widget class="QWidget" name="page">
         <layout class="QVBoxLayout" name="verticalLayout">
@@ -581,16 +590,62 @@
                </property>
                <layout class="QVBoxLayout" name="verticalLayout_16">
                 <item>
-                 <widget class="QLabel" name="label_4">
-                  <property name="text">
-                   <string>If you have no idea what it is mean, please, don't modyfied this line</string>
-                  </property>
-                 </widget>
+                 <layout class="QHBoxLayout" name="horizontalLayout_10" stretch="0,1">
+                  <item>
+                   <widget class="QLabel" name="label_5">
+                    <property name="text">
+                     <string/>
+                    </property>
+                    <property name="pixmap">
+                     <pixmap resource="icons/icons.qrc">:/warning.png</pixmap>
+                    </property>
+                    <property name="scaledContents">
+                     <bool>true</bool>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QLabel" name="label_4">
+                    <property name="text">
+                     <string>If you have no idea what it is mean, please, don't modyfied this line</string>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
                 </item>
                 <item>
-                 <widget class="QLineEdit" name="lineEdit"/>
+                 <widget class="QLineEdit" name="shellEdit"/>
+                </item>
+                <item>
+                 <layout class="QHBoxLayout" name="horizontalLayout_9">
+                  <item>
+                   <spacer name="horizontalSpacer_8">
+                    <property name="orientation">
+                     <enum>Qt::Horizontal</enum>
+                    </property>
+                    <property name="sizeHint" stdset="0">
+                     <size>
+                      <width>40</width>
+                      <height>20</height>
+                     </size>
+                    </property>
+                   </spacer>
+                  </item>
+                  <item>
+                   <widget class="QPushButton" name="defaultShellBtn">
+                    <property name="text">
+                     <string>Default</string>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
                 </item>
                </layout>
+               <zorder>label_4</zorder>
+               <zorder>shellEdit</zorder>
+               <zorder>label_5</zorder>
+               <zorder>verticalSpacer_7</zorder>
+               <zorder>horizontalSpacer_9</zorder>
               </widget>
              </item>
              <item>
@@ -600,8 +655,146 @@
                </property>
                <property name="sizeHint" stdset="0">
                 <size>
+                 <width>417</width>
+                 <height>208</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+            </layout>
+            <zorder>groupBox_4</zorder>
+            <zorder>label_4</zorder>
+           </widget>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QWidget" name="page_6">
+        <layout class="QVBoxLayout" name="verticalLayout_21">
+         <item>
+          <widget class="QTabWidget" name="tabWidget_6">
+           <property name="currentIndex">
+            <number>0</number>
+           </property>
+           <widget class="QWidget" name="tab_5">
+            <attribute name="title">
+             <string>Temporary files location</string>
+            </attribute>
+            <layout class="QVBoxLayout" name="verticalLayout_20">
+             <item>
+              <widget class="QGroupBox" name="groupBox_5">
+               <property name="title">
+                <string>Chose folder for temporary files</string>
+               </property>
+               <layout class="QVBoxLayout" name="verticalLayout_19">
+                <item>
+                 <layout class="QHBoxLayout" name="horizontalLayout_11">
+                  <item>
+                   <widget class="QLabel" name="label_6">
+                    <property name="text">
+                     <string>PowerShell script files:</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <spacer name="horizontalSpacer_9">
+                    <property name="orientation">
+                     <enum>Qt::Horizontal</enum>
+                    </property>
+                    <property name="sizeType">
+                     <enum>QSizePolicy::Fixed</enum>
+                    </property>
+                    <property name="sizeHint" stdset="0">
+                     <size>
+                      <width>0</width>
+                      <height>20</height>
+                     </size>
+                    </property>
+                   </spacer>
+                  </item>
+                  <item>
+                   <widget class="QLineEdit" name="psScriptFolderEdit"/>
+                  </item>
+                  <item>
+                   <widget class="QPushButton" name="psScriptBrowseFolderBtn">
+                    <property name="text">
+                     <string>Browse...</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QPushButton" name="psScriptResetFolderBtn">
+                    <property name="text">
+                     <string/>
+                    </property>
+                    <property name="icon">
+                     <iconset resource="icons/icons.qrc">
+                      <normaloff>:/refresh.png</normaloff>:/refresh.png</iconset>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </item>
+                <item>
+                 <layout class="QHBoxLayout" name="horizontalLayout_12">
+                  <item>
+                   <widget class="QLabel" name="label_7">
+                    <property name="text">
+                     <string>Xml result files:</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <spacer name="horizontalSpacer_10">
+                    <property name="orientation">
+                     <enum>Qt::Horizontal</enum>
+                    </property>
+                    <property name="sizeType">
+                     <enum>QSizePolicy::Fixed</enum>
+                    </property>
+                    <property name="sizeHint" stdset="0">
+                     <size>
+                      <width>34</width>
+                      <height>20</height>
+                     </size>
+                    </property>
+                   </spacer>
+                  </item>
+                  <item>
+                   <widget class="QLineEdit" name="xmlFolderEdit"/>
+                  </item>
+                  <item>
+                   <widget class="QPushButton" name="xmlBrowseFolderBtn">
+                    <property name="text">
+                     <string>Browse...</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QPushButton" name="xmlResetFolderBtn">
+                    <property name="text">
+                     <string/>
+                    </property>
+                    <property name="icon">
+                     <iconset resource="icons/icons.qrc">
+                      <normaloff>:/refresh.png</normaloff>:/refresh.png</iconset>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </item>
+               </layout>
+              </widget>
+             </item>
+             <item>
+              <spacer name="verticalSpacer_8">
+               <property name="orientation">
+                <enum>Qt::Vertical</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
                  <width>20</width>
-                 <height>256</height>
+                 <height>237</height>
                 </size>
                </property>
               </spacer>

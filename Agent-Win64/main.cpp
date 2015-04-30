@@ -12,13 +12,7 @@
 
 int main(int argc, char* argv[])
 {
-   //QApplication app(argc, argv);
     AgentApplication app(argc, argv);
-
-   //QFile file("Application-29.04.2015_17-49-28.xml");
-   //qDebug() << file.exists();
-
-   return app.exec();
+    return app.exec();
 }
-// FIXME Если журнал пуст - то ps ничего не возвращает и не создает файла
-
+// TODO папка для временных файлов

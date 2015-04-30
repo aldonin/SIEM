@@ -2,6 +2,7 @@
 #include <QTcpSocket>
 #include <QFile>
 #include <QSettings>
+#include "globalnamespace.h"
 
 FileSender::FileSender(QString fileName,QObject *parent) :
     QObject(parent)
@@ -10,14 +11,15 @@ FileSender::FileSender(QString fileName,QObject *parent) :
 
     QSettings settings;
     settings.beginGroup("server");
-    m_host = settings.value("host", QVariant("localhost")).toString();
-    m_port = settings.value("port", QVariant(2323)).toUInt();
+    m_host = settings.value("host", QVariant(DEFAULT_HOST_NAME)).toString();
+    m_port = settings.value("port", QVariant(DEFAULT_PORT)).toUInt();
     settings.endGroup();
 }
 
 FileSender::~FileSender()
 {
     qDebug() << "~FileSender";
+    delete m_file;
 }
 
 void FileSender::send()
@@ -27,12 +29,13 @@ void FileSender::send()
     connect(socket, SIGNAL(disconnected()), socket, SLOT(deleteLater()));
     connect(socket, SIGNAL(disconnected()), this, SLOT(disconnected()));
 
-    //socket->connectToHost("localhost", 2323);
     socket->connectToHost(m_host, m_port);
     socket->waitForConnected();
 
-    if (!m_file->open(QIODevice::ReadOnly))  {
-        qDebug() << "Can't open file";
+    if ( (socket->state() != QAbstractSocket::ConnectedState) || (!m_file->open(QIODevice::ReadOnly)) ) {
+        qDebug() << "Socket can't connect or can't open file for transfer";
+        delete socket;
+        emit finished( m_file->fileName() );
         return;
     }
 
@@ -58,7 +61,7 @@ void FileSender::send()
 
 void FileSender::disconnected()
 {
-    emit finished();
+    emit finished( m_file->fileName() );
     qDebug() << "disconnected!";
 }
 

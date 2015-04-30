@@ -7,11 +7,10 @@
 #include <QProcess>
 
 #include "filesender.h"
+#include "globalnamespace.h"
 
 Collector::Collector(QObject *parent) : QObject(parent)
 {
-    executeStr = "cmd /C powershell -NoProfile –ExecutionPolicy Unrestricted –File D:/1.ps1";
-
     updateSettings();
 }
 
@@ -36,10 +35,13 @@ void Collector::saveSettings()
 void Collector::collect(const AgentApplication::Journal type)
 {
     QDateTime curTime = QDateTime::currentDateTime();
-    QFile executePS(QString("%1-%2.ps1")
+    //QFile executePS(QString("%1-%2.ps1")
+    QFile executePS(QString("%1/%2-%3.ps1")
+                    .arg( m_psScriptTempFolder )
                     .arg( AgentApplication::journalToString(type) )
                     .arg( curTime.toString("dd.MM.yyyy_hh-mm-ss") ));
 
+    qDebug() << executePS.fileName();
     if (!executePS.open(QIODevice::WriteOnly | QIODevice::Text)) {
         qDebug() << "Can't open file";
     } else {
@@ -48,7 +50,9 @@ void Collector::collect(const AgentApplication::Journal type)
 
         QDateTime lastTimeUpdate = m_lastTimeCollect.value(type, curTime);
 
-        QString xmlFileName = QString("%1-%2.xml")
+        //QString xmlFileName = QString("%1-%2.xml")
+        QString xmlFileName = QString("%1/%2-%3.xml")
+                .arg( m_xmlTempFolder )
                 .arg( AgentApplication::journalToString(type) )
                 .arg( curTime.toString("dd.MM.yyyy_hh-mm-ss") );
 
@@ -59,7 +63,7 @@ void Collector::collect(const AgentApplication::Journal type)
 
         executePS.close();
 
-        executeStr = QString("cmd /C powershell -NoProfile –ExecutionPolicy Unrestricted –File %1").arg(executePS.fileName());
+        executeStr += executePS.fileName();
 
         QProcess prc;
         prc.start(executeStr);
@@ -68,14 +72,19 @@ void Collector::collect(const AgentApplication::Journal type)
         // Remove PS script file
         executePS.remove();
 
+        // Файла нет, либо ошибка shell'a, либо в журнале ничего не изменилось, либо он вообще пуст
+        if (!QFile(xmlFileName).exists())
+            return;
+
         FileSender *sender = new FileSender(xmlFileName);
         QThread *thread = new QThread;
         sender->moveToThread(thread);
 
-        connect(thread, SIGNAL(started()),  sender, SLOT(send()));
-        connect(sender, SIGNAL(finished()), thread, SLOT(quit()));
-        connect(sender, SIGNAL(finished()), sender, SLOT(deleteLater()));
-        connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
+        connect(thread, SIGNAL(started()),         sender, SLOT(send()));
+        connect(sender, SIGNAL(finished(QString)), thread, SLOT(quit()));
+        connect(sender, SIGNAL(finished(QString)), sender, SLOT(deleteLater()));
+        connect(sender, SIGNAL(finished(QString)), this,   SLOT(removeXmlFile(QString)));
+        connect(thread, SIGNAL(finished()),        thread, SLOT(deleteLater()));
 
         thread->start();
     }
@@ -114,5 +123,21 @@ void Collector::updateSettings()
         }
     }
     settings.endGroup();
+
+    executeStr = QString("cmd /C powershell %1 -File ").arg( settings.value("PowerShell/executeParams",
+                                                                            QVariant(DEFAULT_SHELL_PARAM)).toString() );
+
+    settings.beginGroup("Path");
+    m_psScriptTempFolder = settings.value("PSScriptTemporary", QVariant(QCoreApplication::applicationDirPath() + "/" + DEFAULT_FOLDER_PSSCRIPT_TEMPORARY)).toString();
+    m_xmlTempFolder =      settings.value("XmlTemporary",      QVariant(QCoreApplication::applicationDirPath() + "/" + DEFAULT_FOLDER_XML_TEMPORARY)).toString();
+    settings.endGroup();
+}
+
+void Collector::removeXmlFile(const QString &fileName)
+{
+    QFile removable(fileName);
+
+    if (removable.exists())
+        removable.remove();
 }
 
