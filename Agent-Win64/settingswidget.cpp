@@ -156,7 +156,6 @@ void SettingsWidget::readSettings()
     xmlFolderEdit->setText(      settings.value("XmlTemporary",      QVariant(QCoreApplication::applicationDirPath() + "/" + DEFAULT_FOLDER_XML_TEMPORARY)).toString() );
     settings.endGroup();
 
-    qDebug() << psScriptFolderEdit->text() << " " << xmlFolderEdit->text();
     if (!QDir(psScriptFolderEdit->text()).exists())
         QDir().mkdir(psScriptFolderEdit->text());
 
