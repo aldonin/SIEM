@@ -19,7 +19,7 @@ HEADERS += \
     watcher.h \
     journalfinder.h \
     filesender.h \
-    globalnamespace.h
+    constants.h
 
 RESOURCES += \
     icons/icons.qrc

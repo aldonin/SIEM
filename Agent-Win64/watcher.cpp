@@ -4,7 +4,9 @@
 #include <QTimer>
 #include <QSettings>
 
-#include "globalnamespace.h"
+#include "constants.h"
+
+using namespace Constants::Time;
 
 Watcher::Watcher(QObject *parent) : QObject(parent)
 {
@@ -91,9 +93,3 @@ void Watcher::journalChange(const QString &path)
 
     emit journalChange( AgentApplication::stringToJournal(str) );
 }
-
-void Watcher::currentThread()
-{
-    qDebug() << "QThread watcher from currentThread(): " << QThread::currentThreadId();
-}
-

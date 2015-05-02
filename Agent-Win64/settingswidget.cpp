@@ -5,7 +5,12 @@
 #include <QDir>
 #include <QFileDialog>
 
-#include "globalnamespace.h"
+#include "constants.h"
+
+using namespace Constants::PowerShell;
+using namespace Constants::Server;
+using namespace Constants::TemporaryFolders;
+using namespace Constants::Time;
 
 SettingsWidget::SettingsWidget(QWidget *parent) :
     QWidget(parent), m_isCanClose(false)
@@ -42,6 +47,11 @@ SettingsWidget::SettingsWidget(QWidget *parent) :
     // Сбросить папки для хранения файлов на дефолтные
     connect(psScriptResetFolderBtn, SIGNAL(clicked()), this, SLOT(resetFolderClicked()));
     connect(xmlResetFolderBtn,      SIGNAL(clicked()), this, SLOT(resetFolderClicked()));
+}
+
+SettingsWidget::~SettingsWidget()
+{
+    qDebug() << "~SettingsWidget()";
 }
 
 bool SettingsWidget::isCanClose() const
@@ -90,10 +100,28 @@ void SettingsWidget::saveSettings()
 
     settings.setValue("PowerShell/executeParams", shellEdit->text().simplified());
 
+
     settings.beginGroup("Path");
+    // Удалим папки, которые были созданы до этого
+    QString currentDir = settings.value("PSScriptTemporary", QVariant("")).toString();
+    if (!currentDir.isEmpty())
+        QDir().rmdir(currentDir);
+
+    currentDir = settings.value("XmlTemporary", QVariant("")).toString();
+
+    if (!currentDir.isEmpty())
+        QDir().rmdir(currentDir);
+
     settings.setValue("PSScriptTemporary", psScriptFolderEdit->text());
     settings.setValue("XmlTemporary", xmlFolderEdit->text());
     settings.endGroup();
+
+    // Создадим новые папки
+    if (!QDir(psScriptFolderEdit->text()).exists())
+        QDir().mkdir(psScriptFolderEdit->text());
+
+    if (!QDir(xmlFolderEdit->text()).exists())
+        QDir().mkdir(xmlFolderEdit->text());
 
     emit settingsSaved();
 }
@@ -127,6 +155,13 @@ void SettingsWidget::readSettings()
     psScriptFolderEdit->setText( settings.value("PSScriptTemporary", QVariant(QCoreApplication::applicationDirPath() + "/" + DEFAULT_FOLDER_PSSCRIPT_TEMPORARY)).toString() );
     xmlFolderEdit->setText(      settings.value("XmlTemporary",      QVariant(QCoreApplication::applicationDirPath() + "/" + DEFAULT_FOLDER_XML_TEMPORARY)).toString() );
     settings.endGroup();
+
+    qDebug() << psScriptFolderEdit->text() << " " << xmlFolderEdit->text();
+    if (!QDir(psScriptFolderEdit->text()).exists())
+        QDir().mkdir(psScriptFolderEdit->text());
+
+    if (!QDir(xmlFolderEdit->text()).exists())
+        QDir().mkdir(xmlFolderEdit->text());
 }
 
 void SettingsWidget::modeChanged(bool state)
@@ -155,6 +190,9 @@ void SettingsWidget::choseFolderClicked()
 
     if (dir.isEmpty())
         return;
+
+    if (!QDir(dir).exists())
+        QDir().mkdir(dir);
 
     QPushButton *btn = dynamic_cast<QPushButton*>(sender());
 

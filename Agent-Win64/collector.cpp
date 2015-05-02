@@ -7,7 +7,10 @@
 #include <QProcess>
 
 #include "filesender.h"
-#include "globalnamespace.h"
+#include "constants.h"
+
+using namespace Constants::TemporaryFolders;
+using namespace Constants::PowerShell;
 
 Collector::Collector(QObject *parent) : QObject(parent)
 {
@@ -35,7 +38,6 @@ void Collector::saveSettings()
 void Collector::collect(const AgentApplication::Journal type)
 {
     QDateTime curTime = QDateTime::currentDateTime();
-    //QFile executePS(QString("%1-%2.ps1")
     QFile executePS(QString("%1/%2-%3.ps1")
                     .arg( m_psScriptTempFolder )
                     .arg( AgentApplication::journalToString(type) )
@@ -50,7 +52,6 @@ void Collector::collect(const AgentApplication::Journal type)
 
         QDateTime lastTimeUpdate = m_lastTimeCollect.value(type, curTime);
 
-        //QString xmlFileName = QString("%1-%2.xml")
         QString xmlFileName = QString("%1/%2-%3.xml")
                 .arg( m_xmlTempFolder )
                 .arg( AgentApplication::journalToString(type) )
@@ -103,11 +104,6 @@ void Collector::collectAll()
     }
 
     settings.endGroup();
-}
-
-void Collector::currentThread()
-{
-    qDebug() << "QThread collector: " << QThread::currentThreadId();
 }
 
 void Collector::updateSettings()

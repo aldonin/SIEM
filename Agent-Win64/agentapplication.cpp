@@ -19,25 +19,21 @@ AgentApplication::AgentApplication(int argc, char *argv[]) :
     m_collector = new Collector;
 
 
+    QThread *wthread = new QThread;
+    m_watcher->moveToThread(wthread);
+    connect(wthread, SIGNAL(started()),  m_watcher, SLOT(initTimerAtCurrentThread()));
+    connect(wthread, SIGNAL(finished()), m_watcher, SLOT(deleteLater()));
+    connect(this,    SIGNAL(quitApp()),  wthread,   SLOT(quit()));
+    connect(wthread, SIGNAL(finished()), wthread,   SLOT(deleteLater()));
+    wthread->start();
 
 
-    QThread *thread = new QThread;
-    m_watcher->moveToThread(thread);
-    connect(thread, SIGNAL(started()), m_watcher, SLOT(currentThread()));
-    connect(thread, SIGNAL(started()), m_watcher, SLOT(initTimerAtCurrentThread()));
-    connect(thread, SIGNAL(finished()), m_watcher, SLOT(deleteLater()));
-    connect(this, SIGNAL(quitApp()), thread, SLOT(quit()));
-    connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
-    thread->start();
-
-
-    QThread *secThread = new QThread;
-    m_collector->moveToThread(secThread);
-    connect(secThread, SIGNAL(started()), m_collector, SLOT(currentThread()));
-    connect(secThread, SIGNAL(finished()), m_collector, SLOT(deleteLater()));
-    connect(this, SIGNAL(quitApp()), secThread, SLOT(quit()));
-    connect(secThread, SIGNAL(finished()), secThread, SLOT(deleteLater()));
-    secThread->start();
+    QThread *cThread = new QThread;
+    m_collector->moveToThread(cThread);
+    connect(cThread, SIGNAL(finished()), m_collector, SLOT(deleteLater()));
+    connect(this,    SIGNAL(quitApp()),  cThread,     SLOT(quit()));
+    connect(cThread, SIGNAL(finished()), cThread,     SLOT(deleteLater()));
+    cThread->start();
 
 
 
@@ -50,9 +46,6 @@ AgentApplication::AgentApplication(int argc, char *argv[]) :
 
     connect(m_trayIcon, SIGNAL(quitApplication()), this, SLOT(onQuit()));
     connect(this, SIGNAL(quitApp()), qApp, SLOT(quit()));
-
-
-    qDebug() << "QThread AgentApplication: " << QThread::currentThreadId();
 }
 
 AgentApplication::~AgentApplication()

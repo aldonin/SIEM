@@ -2,7 +2,9 @@
 #include <QTcpSocket>
 #include <QFile>
 #include <QSettings>
-#include "globalnamespace.h"
+#include "constants.h"
+
+using namespace Constants::Server;
 
 FileSender::FileSender(QString fileName,QObject *parent) :
     QObject(parent)

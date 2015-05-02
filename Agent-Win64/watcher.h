@@ -13,7 +13,7 @@ class Watcher : public QObject
     Q_ENUMS(Mode)
 
 public:
-    Watcher(QObject *parent = 0);
+    explicit Watcher(QObject *parent = 0);
     ~Watcher();
 
     enum Mode {
@@ -30,7 +30,6 @@ public slots:
 
 private slots:
     void journalChange(const QString &path);
-    void currentThread();
     void changeMode(const Watcher::Mode mode);
     void changeInterval(const int mins);
 

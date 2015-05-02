@@ -9,6 +9,7 @@ class SettingsWidget : public QWidget, private Ui::SettingsWidget
 
 public:
     explicit SettingsWidget(QWidget *parent = 0);
+    ~SettingsWidget();
 
     bool isCanClose() const;
     void setIsCanClose(const bool value);

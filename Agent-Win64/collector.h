@@ -27,8 +27,6 @@ public slots:
     // Для всех журнала по событию таймера
     void collectAll();
 
-    void currentThread();
-
     void updateSettings();
 
 private slots:
