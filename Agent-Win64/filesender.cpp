@@ -57,7 +57,7 @@ void FileSender::send()
     while (x < block.size()) {
         qint64 y = socket->write(block);
         x += y;
-        qDebug() << x;
+        //qDebug() << x;    // summary size
     }
 }
 

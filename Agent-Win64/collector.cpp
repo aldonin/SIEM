@@ -43,7 +43,6 @@ void Collector::collect(const AgentApplication::Journal type)
                     .arg( AgentApplication::journalToString(type) )
                     .arg( curTime.toString("dd.MM.yyyy_hh-mm-ss") ));
 
-    qDebug() << executePS.fileName();
     if (!executePS.open(QIODevice::WriteOnly | QIODevice::Text)) {
         qDebug() << "Can't open file";
     } else {
