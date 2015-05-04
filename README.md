@@ -1,2 +1,3 @@
 # SIEM
-Security information and event management, bachelor's diploma
+===========
+Security information and event management, master's diploma

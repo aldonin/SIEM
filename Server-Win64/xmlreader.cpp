@@ -4,7 +4,7 @@
 #include <QFile>
 #include <QDebug>
 #include <journalevent.h>
-#include <constants.h>
+#include "constants.h"
 
 using namespace Constants::Server;
 
@@ -61,11 +61,10 @@ void XmlReader::getElements(QDomElement root, QString tag, QString att)
 
         if ( elm.isElement() ) {
             QDomElement e = elm.toElement();
+
             // Если не пусты имя, значение и данных элемент не содержит подэлементов - добавляем соответствующее поле в событие
-            if (!e.attribute(att).isEmpty() && !e.text().isEmpty() && e.elementsByTagName("Property").size() == 0) {
-                //qDebug() << e.attribute(att) << e.text();
-                ev->insert( e.attribute(att), e.text() );
-            }
+            if (!e.attribute(att).isEmpty() && !e.text().isEmpty() && e.elementsByTagName("Property").size() == 0)
+                ev->insert( e.attribute(att), e.text() );            
         }
     }
 
