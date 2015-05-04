@@ -41,7 +41,6 @@ void Server::incomingConnection(qintptr handle)
 
 void Server::handleXml(const QString &fileName, const QString &host, const quint16 port)
 {
-    qDebug() << "HandleXMl";
     XmlReader *reader = new XmlReader(fileName);
     reader->setHostAddres(host);
     reader->setPortAddres(port);
@@ -49,13 +48,11 @@ void Server::handleXml(const QString &fileName, const QString &host, const quint
     QThread *thread = new QThread;
     reader->moveToThread(thread);
 
-    connect(thread, SIGNAL(started()),                       reader, SLOT(processXml()));
+    connect(thread, SIGNAL(started()),                      reader, SLOT(processXml()));
     connect(reader, SIGNAL(finished(QList<JournalEvent*>)), thread, SLOT(quit()));
     connect(reader, SIGNAL(finished(QList<JournalEvent*>)), reader, SLOT(deleteLater()));
     connect(reader, SIGNAL(finished(QList<JournalEvent*>)), this,   SLOT(writeToDataBase(QList<JournalEvent*>)));
-    connect(thread, SIGNAL(finished()),                      thread, SLOT(deleteLater()));
-
-    // TODO добавить слот на обработку finished(QList) для пушера в базу данных
+    connect(thread, SIGNAL(finished()),                     thread, SLOT(deleteLater()));
 
     thread->start();
 }

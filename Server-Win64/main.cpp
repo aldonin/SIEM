@@ -12,11 +12,9 @@ int main(int argc, char* argv[])
 {
     QCoreApplication app(argc, argv);
 
-    //typedef QList<JournalEvent*> ListOfEvents;
-    //qRegisterMetaType<ListOfEvents>("ListOfEvents");
-    //qRegisterMetaType<QList<JournalEvent*>& >("QList<JournalEvent*>&");
     Server server;
     server.start();
+
     return app.exec();
 
 }
