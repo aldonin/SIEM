@@ -69,8 +69,12 @@ void Collector::collect(const AgentApplication::Journal type)
         prc.start(executeStr);
         prc.waitForFinished();
 
+        // Убираем из конца строки PS путь до файла
+        executeStr.chop( executePS.fileName().length() );
+
         // Remove PS script file
         executePS.remove();
+
 
         // Файла нет, либо ошибка shell'a, либо в журнале ничего не изменилось, либо он вообще пуст
         if (!QFile(xmlFileName).exists())

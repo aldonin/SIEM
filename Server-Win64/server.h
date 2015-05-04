@@ -4,7 +4,8 @@
 #include <QObject>
 #include <QTcpServer>
 
-class QThreadPool;
+#include "journalevent.h"
+
 
 class Server : public QTcpServer
 {
@@ -18,7 +19,11 @@ public:
 protected:
     void incomingConnection(qintptr handle) Q_DECL_OVERRIDE;
 
-private:
+private slots:
+    void handleXml( const QString &fileName, const QString &host, const quint16 port );
+    void writeToDataBase( QList<JournalEvent *> );
 };
+
+Q_DECLARE_METATYPE(QList<JournalEvent*>)
 
 #endif // SERVER_H

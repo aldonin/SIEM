@@ -3,9 +3,12 @@
 #include <QTcpSocket>
 #include <QFile>
 #include <QDebug>
+#include <QHostAddress>
 
 SocketThread::SocketThread(qintptr descriptor, QObject *parent)
-    : QThread(parent), m_socketDescriptor(descriptor)
+    : QThread(parent),
+      m_socketDescriptor(descriptor),
+      m_blockSize(0)
 {
     qDebug() << "SocketThread(), thread = " << QThread::currentThreadId();
 }
@@ -45,7 +48,7 @@ void SocketThread::onReadyRead()
 
     QString fileName;
     in >> fileName;
-    qDebug() << fileName;
+    qDebug() << fileName.section("/", -1);
     QByteArray line = m_socket->readAll();
     QFile target("D:\\RECV___Application-29.04.2015_17-59-06.xml");
     if (!target.open(QIODevice::WriteOnly)) {
@@ -57,10 +60,8 @@ void SocketThread::onReadyRead()
     target.close();
 
     qDebug() << "Finished!";
-
+    emit onFinishRecieved( target.fileName(), m_socket->peerAddress().toString(), m_socket->peerPort() );
     m_socket->disconnectFromHost();
-
-    qDebug() << "Disconnect!";
 }
 
 void SocketThread::onDisconnected()
