@@ -1,5 +1,4 @@
 #include "server.h"
-#include "constants.h"
 #include "socketthread.h"
 #include "xmlreader.h"
 
@@ -8,8 +7,10 @@
 
 using namespace Constants::Time;
 
-Server::Server(QObject *parent)
-    : QTcpServer(parent)
+Server::Server(QHostAddress host, quint16 port, QObject *parent)
+    : QTcpServer(parent),
+      m_host(host),
+      m_port(port)
 {
     qRegisterMetaType<QList<JournalEvent*> >();
 }
@@ -21,10 +22,15 @@ Server::~Server()
 
 void Server::start()
 {
-    if ( this->listen(QHostAddress::Any, 2323) )
+    if ( this->listen(m_host, m_port) )
         qDebug() << "Server started!";
     else
         qDebug() << "Can't start server";
+}
+
+void Server::updateSettings()
+{
+    //TODO проверять изменились ли host and port и если надо перезапускать сервак
 }
 
 void Server::incomingConnection(qintptr handle)
