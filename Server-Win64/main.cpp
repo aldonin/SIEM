@@ -2,12 +2,19 @@
 
 #include "server.h"
 
+#include "xmlreader.h"
+#include "journalevent.h"
+#include "serverapplication.h"
+
+#include <QDebug>
+#include <QList>
+
+
+
 int main(int argc, char* argv[])
 {
-    QCoreApplication app(argc, argv);
 
-    Server server;
-    server.start();
+    ServerApplication app(argc, argv);
 
     return app.exec();
 
