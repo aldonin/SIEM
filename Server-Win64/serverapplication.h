@@ -23,6 +23,9 @@ private slots:
     void openSettings();
     void onQuitAction();
 
+public slots:
+    void updateSettings();
+
 private:
     Server          *m_server;
     QSystemTrayIcon *m_trayIcon;

@@ -68,26 +68,32 @@ bool JournalEvent::insert(const QString &value, const QString &key)
 
    return true;
 }
+
 QString JournalEvent::getEventID() const
 {
     return EventID;
 }
+
 QString JournalEvent::getMachineName() const
 {
     return MachineName;
 }
+
 QString JournalEvent::getData() const
 {
     return Data;
 }
+
 QString JournalEvent::getIndex() const
 {
     return Index;
 }
+
 QString JournalEvent::getCategory() const
 {
     return Category;
 }
+
 QString JournalEvent::getCategoryNumber() const
 {
     return CategoryNumber;
@@ -96,35 +102,32 @@ QString JournalEvent::getEntryType() const
 {
     return EntryType;
 }
+
 QString JournalEvent::getMessage() const
 {
     return Message;
 }
+
 QString JournalEvent::getSource() const
 {
     return Source;
 }
+
 QString JournalEvent::getInstanceId() const
 {
     return InstanceId;
 }
+
 QString JournalEvent::getTimeGenerated() const
 {
     return TimeGenerated;
 }
+
 QString JournalEvent::getTimeWritten() const
 {
     return TimeWritten;
 }
-QString JournalEvent::getHost() const
-{
-    return m_host;
-}
 
-void JournalEvent::setHost(const QString &host)
-{
-    m_host = host;
-}
 quint16 JournalEvent::getPort() const
 {
     return m_port;
@@ -134,6 +137,17 @@ void JournalEvent::setPort(const quint16 &port)
 {
     m_port = port;
 }
+
+QHostAddress JournalEvent::host() const
+{
+    return m_host;
+}
+
+void JournalEvent::setHost(const QHostAddress &host)
+{
+    m_host = host;
+}
+
 
 
 

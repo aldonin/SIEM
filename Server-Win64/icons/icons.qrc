@@ -1,13 +1,11 @@
 <RCC>
     <qresource prefix="/">
-        <file>agent.png</file>
         <file>general.png</file>
-        <file>log.png</file>
-        <file>mode.png</file>
         <file>server.png</file>
-        <file>powershell.png</file>
         <file>folder.png</file>
         <file>warning.png</file>
         <file>refresh.png</file>
+        <file>Database.png</file>
+        <file>serverIcon.png</file>
     </qresource>
 </RCC>

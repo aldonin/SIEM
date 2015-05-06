@@ -3,6 +3,7 @@
 
 #include <QString>
 #include <QObject>
+#include <QHostAddress>
 
 
 class JournalEvent
@@ -26,11 +27,11 @@ public:
     QString getTimeGenerated() const;
     QString getTimeWritten() const;
 
-    QString getHost() const;
-    void setHost(const QString &host);
-
     quint16 getPort() const;
     void setPort(const quint16 &port);
+
+    QHostAddress host() const;
+    void setHost(const QHostAddress &host);
 
 private:
     QString EventID;
@@ -46,8 +47,8 @@ private:
     QString TimeGenerated;
     QString TimeWritten;
 
-    QString m_host;
-    quint16 m_port;
+    QHostAddress m_host;
+    quint16      m_port;
 
 private:
     JournalEvent(const JournalEvent&);

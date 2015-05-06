@@ -5,6 +5,7 @@
 #include <QThread>
 #include <QSystemTrayIcon>
 #include <QMenu>
+#include <QSettings>
 #include <QDebug>
 
 ServerApplication::ServerApplication(int argc, char *argv[])
@@ -34,7 +35,7 @@ ServerApplication::ServerApplication(int argc, char *argv[])
     m_settingsWidget = new SettingsWidget;
 
     // Создание контекстного меню IconTray
-    m_trayIcon = new QSystemTrayIcon(QIcon(":agent.png"), this);
+    m_trayIcon = new QSystemTrayIcon(QIcon(":serverIcon.png"), this);
 
     QMenu *menu = new QMenu;
     menu->addAction(tr("Settings"), this, SLOT(openSettings()));
@@ -46,6 +47,10 @@ ServerApplication::ServerApplication(int argc, char *argv[])
 
     // Сигнал выхода из приложения. Кидается по нажатию на Exit контекстного меню
     connect(this, SIGNAL(quitApp()), qApp, SLOT(quit()));
+
+    // Коннекты на апдейт настроек
+    connect(m_settingsWidget, SIGNAL(settingsChanged()), this,     SLOT(updateSettings()));
+    connect(m_settingsWidget, SIGNAL(settingsChanged()), m_server, SLOT(updateSettings()));
 }
 
 ServerApplication::~ServerApplication()
@@ -63,5 +68,20 @@ void ServerApplication::openSettings()
 void ServerApplication::onQuitAction()
 {
     emit quitApp();
+}
+
+void ServerApplication::updateSettings()
+{
+    QSettings settings;
+    bool isStartup = settings.value("General/Startup", QVariant(false)).toBool();
+    QSettings setStartup("HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", QSettings::NativeFormat);
+
+    QString value = ServerApplication::applicationFilePath();
+    value.replace(QRegExp("/"), "\\");
+
+    if ( isStartup )
+        setStartup.setValue("Siem-Server", value);
+     else
+        setStartup.remove("Siem-Server");
 }
 

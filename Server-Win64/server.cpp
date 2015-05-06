@@ -39,13 +39,13 @@ void Server::incomingConnection(qintptr handle)
     SocketThread *thread = new SocketThread(handle);
     connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
 
-    connect(thread, SIGNAL(onFinishRecieved(QString,QString,quint16)),
-            this,   SLOT(handleXml(QString,QString,quint16)));
+    connect(thread, SIGNAL(onFinishRecieved(QString, QString, quint16)),
+            this,   SLOT(handleXml(QString, QHostAddress, quint16)));
 
     thread->start();
 }
 
-void Server::handleXml(const QString &fileName, const QString &host, const quint16 port)
+void Server::handleXml(const QString &fileName, const QHostAddress &host, const quint16 port)
 {
     XmlReader *reader = new XmlReader(fileName);
     reader->setHostAddres(host);

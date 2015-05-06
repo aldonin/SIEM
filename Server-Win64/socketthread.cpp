@@ -3,7 +3,6 @@
 #include <QTcpSocket>
 #include <QFile>
 #include <QDebug>
-#include <QHostAddress>
 
 SocketThread::SocketThread(qintptr descriptor, QObject *parent)
     : QThread(parent),
@@ -60,7 +59,7 @@ void SocketThread::onReadyRead()
     target.close();
 
     qDebug() << "Finished!";
-    emit onFinishRecieved( target.fileName(), m_socket->peerAddress().toString(), m_socket->peerPort() );
+    emit onFinishRecieved( target.fileName(), m_socket->peerAddress(), m_socket->peerPort() );
     m_socket->disconnectFromHost();
 }
 

@@ -4,6 +4,7 @@
 #include <QString>
 #include <QDomElement>
 #include <QObject>
+#include <QHostAddress>
 
 class JournalEvent;
 
@@ -16,7 +17,7 @@ public:
     explicit XmlReader(const QString &fileName);
 
     void setPortAddres(const quint16 &portAddres);
-    void setHostAddres(const QString &hostAddres);
+    void setHostAddres(const QHostAddress &hostAddres);
 
 public slots:
     void processXml();
@@ -28,9 +29,9 @@ private:
     void getElements(QDomElement root, QString tag, QString att);
 
     QList<JournalEvent*> list;
-    QString m_fileName;
-    QString m_hostAddres;
-    quint16 m_portAddres;
+    QString      m_fileName;
+    QHostAddress m_hostAddres;
+    quint16      m_portAddres;
 };
 
 #endif // XMLREADER_H

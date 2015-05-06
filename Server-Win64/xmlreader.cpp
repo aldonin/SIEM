@@ -11,7 +11,7 @@ using namespace Constants::Server;
 XmlReader::XmlReader(const QString &fileName) :
     m_fileName(fileName)
 {
-    m_hostAddres = DEFAULT_HOST_NAME;
+    m_hostAddres = DEFAULT_HOST;
     m_portAddres = DEFAULT_PORT;
 }
 
@@ -53,8 +53,8 @@ void XmlReader::getElements(QDomElement root, QString tag, QString att)
     QDomNodeList nodes = root.elementsByTagName(tag);
 
     JournalEvent *ev = new JournalEvent;
-    ev->setHost(m_hostAddres);
-    ev->setPort(m_portAddres);
+    ev->setHost( m_hostAddres );
+    ev->setPort( m_portAddres );
 
     for (int i = 0; i < nodes.count(); ++i) {
         QDomNode elm = nodes.at(i);
@@ -71,7 +71,7 @@ void XmlReader::getElements(QDomElement root, QString tag, QString att)
     list.append( ev );
 }
 
-void XmlReader::setHostAddres(const QString &hostAddres)
+void XmlReader::setHostAddres(const QHostAddress &hostAddres)
 {
     m_hostAddres = hostAddres;
 }

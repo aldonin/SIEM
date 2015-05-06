@@ -2,7 +2,7 @@
 #define SOCKETTHREAD_H
 
 #include <QThread>
-
+#include <QHostAddress>
 
 class QTcpSocket;
 
@@ -17,7 +17,7 @@ protected:
     void run() Q_DECL_OVERRIDE;
 
 signals:
-    void onFinishRecieved( const QString &fileName, const QString &host, const quint16 port );
+    void onFinishRecieved( const QString &fileName, const QHostAddress &host, const quint16 port );
 
 private slots:
     void onReadyRead();

@@ -25,7 +25,7 @@ protected:
     void incomingConnection(qintptr handle) Q_DECL_OVERRIDE;
 
 private slots:
-    void handleXml( const QString &fileName, const QString &host, const quint16 port );
+    void handleXml( const QString &fileName, const QHostAddress &host, const quint16 port );
     void writeToDataBase( QList<JournalEvent *> );
 
 private:

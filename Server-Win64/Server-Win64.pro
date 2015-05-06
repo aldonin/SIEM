@@ -26,3 +26,4 @@ FORMS += \
 RESOURCES += \
     icons/icons.qrc
 
+
