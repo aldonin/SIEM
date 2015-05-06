@@ -6,11 +6,12 @@
 #include <QFileDialog>
 
 #include "constants.h"
-
+#include "simplecrypt.h"
 
 using namespace Constants::Server;
 using namespace Constants::Time;
 using namespace Constants::TemporaryFolders;
+using namespace Constants::Database;
 
 SettingsWidget::SettingsWidget(QWidget *parent) :
     QWidget(parent), m_isCanClose(false)
@@ -36,9 +37,11 @@ SettingsWidget::SettingsWidget(QWidget *parent) :
     // Смена режима хоста сервера Any-Custom
     connect(customRB, SIGNAL(toggled(bool)), this, SLOT(hostModeChanged(bool)));
 
-
     // Задание дефолтных настроек локации сервера
     connect(defaultServerBtn, SIGNAL(clicked()), this, SLOT(defaultServerBtnClicked()));
+
+    // Дефолтные настройки подключения к базе
+    connect(defaultDBBtn, SIGNAL(clicked()), this, SLOT(defaultDatabaseBtnClicked()));
 
     // Выбор папок для хранения временных файлов
     connect(xmlBrowseFolderBtn, SIGNAL(clicked()), this, SLOT(choseFolderClicked()));
@@ -83,7 +86,7 @@ void SettingsWidget::saveSettings()
 
     // Sever
     settings.beginGroup("Server");
-    settings.setValue("Host", AnyRB->isChecked() ? "0" : hostEdit->text() );
+    settings.setValue("Host", AnyRB->isChecked() ? QHostAddress(QHostAddress::Any).toString() : hostEdit->text() );
     settings.setValue("Port", portEdit->text().toUInt());
     settings.endGroup();
 
@@ -104,7 +107,16 @@ void SettingsWidget::saveSettings()
         QDir().mkdir(xmlFolderEdit->text());
 
 
-    // TODO Database
+    // Database
+    settings.beginGroup("Database");
+    settings.setValue("Location", dbLocation->text());
+    settings.setValue("Name", dbName->text());
+    settings.setValue("User", dbUser->text());
+    SimpleCrypt crypt;
+    crypt.setKey(Constants::Crypto::KEY);
+    QString encryptedPassword = crypt.encryptToString(dbPass->text());
+    settings.setValue("Password", encryptedPassword);
+    settings.endGroup();
 
     emit settingsSaved();
 }
@@ -142,11 +154,26 @@ void SettingsWidget::readSettings()
     settings.endGroup();
 
 
-    // TODO Database
+    // Database
+    settings.beginGroup("Database");
+
+    dbLocation->setText( settings.value("Location", QVariant(DEFAULT_DB_LOCATION)).toString() );
+    dbName->setText( settings.value("Name", QVariant(DEFAULT_DB_NAME)).toString() );
+    dbUser->setText( settings.value("User", QVariant(DEFAULT_DB_USERNAME)).toString() );
+
+    QString enctyptedPassword = settings.value("Password", QVariant(DEFAULT_DB_PASSWORD)).toString();
+    if (enctyptedPassword != DEFAULT_DB_PASSWORD) {
+        SimpleCrypt crypt;
+        crypt.setKey(Constants::Crypto::KEY);
+        QString decryptPassword = crypt.decryptToString( enctyptedPassword );
+        dbPass->setText( decryptPassword );
+    } else {
+        dbPass->setText( enctyptedPassword );
+    }
+
+    settings.endGroup();
 
 }
-
-
 
 void SettingsWidget::defaultServerBtnClicked()
 {
@@ -179,6 +206,14 @@ void SettingsWidget::hostModeChanged(bool state)
 {
     hostLbl->setEnabled(state);
     hostEdit->setEnabled(state);
+}
+
+void SettingsWidget::defaultDatabaseBtnClicked()
+{
+    dbLocation->setText( DEFAULT_DB_LOCATION );
+    dbName->setText( DEFAULT_DB_NAME );
+    dbUser->setText( DEFAULT_DB_USERNAME );
+    dbPass->setText( DEFAULT_DB_PASSWORD );
 }
 
 void SettingsWidget::notifyAllAboutChanges()

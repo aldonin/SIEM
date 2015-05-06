@@ -28,10 +28,16 @@ private slots:
     void notifyAllAboutChanges();
     void saveSettings();
     void readSettings();
+
     void defaultServerBtnClicked();
+
     void choseFolderClicked();
     void resetFolderClicked();
+
     void hostModeChanged(bool);
+
+    void defaultDatabaseBtnClicked();
+
 };
 
 #endif // SETTINGSWIDGET_H

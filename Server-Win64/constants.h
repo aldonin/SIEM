@@ -19,6 +19,17 @@ namespace Constants {
         const char DEFAULT_FOLDER_XML_TEMPORARY[] = "Xml_temporary";
     }
 
+    namespace Database {
+        const char DEFAULT_DB_NAME[]     = "database";
+        const char DEFAULT_DB_USERNAME[] = "admin";
+        const char DEFAULT_DB_PASSWORD[] = "administrator";
+        const char DEFAULT_DB_LOCATION[] = "localhost";
+    }
+
+    namespace Crypto {
+        const quint64 KEY = Q_UINT64_C(0x0a9dc2a6cab3f78a);
+    }
+
 }
 
 #endif // CONSTANTS

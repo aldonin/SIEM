@@ -1,4 +1,4 @@
-QT += network widgets xml
+QT += network widgets xml sql
 
 CONFIG += c++11
 
@@ -9,7 +9,8 @@ SOURCES += \
     xmlreader.cpp \
     journalevent.cpp \
     serverapplication.cpp \
-    settingswidget.cpp
+    settingswidget.cpp \
+    simplecrypt.cpp
 
 HEADERS += \
     server.h \
@@ -18,7 +19,8 @@ HEADERS += \
     xmlreader.h \
     journalevent.h \
     serverapplication.h \
-    settingswidget.h
+    settingswidget.h \
+    simplecrypt.h
 
 FORMS += \
     settingswidget.ui

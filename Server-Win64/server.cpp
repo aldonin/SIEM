@@ -3,6 +3,7 @@
 #include "xmlreader.h"
 
 #include <QDebug>
+#include <QSettings>
 
 
 using namespace Constants::Time;
@@ -23,14 +24,35 @@ Server::~Server()
 void Server::start()
 {
     if ( this->listen(m_host, m_port) )
-        qDebug() << "Server started!";
+        qDebug() << "Server started at " << m_host.toString() << ":" << m_port;
     else
         qDebug() << "Can't start server";
 }
 
 void Server::updateSettings()
 {
-    //TODO проверять изменились ли host and port и если надо перезапускать сервак
+    QSettings settings;
+    settings.beginGroup("Server");
+    QString host = settings.value("Host", QVariant(Constants::Server::DEFAULT_HOST.toString())).toString();
+    quint16 port = settings.value("Port", QVariant(Constants::Server::DEFAULT_PORT)).toUInt();
+    settings.endGroup();
+
+    /* Достаточно интересно, почему мы сравниваем QString'и хостов, а не сами экземляры классов.
+        Почему-то, а возможно и понятно почему, QHostAddress::Any при конвертации в QString дает "0.0.0.0",
+        но при конвертации из "0.0.0.0" он не понимает, что это Any.
+        Поэтому приходится из настроек принимать не QHostAddress, а QString и при проверке
+        сравнивать не m_host, а m_host.toString().
+    */
+    if (port != m_port || host != m_host.toString()) {
+
+        // Stop server listening
+        this->close();
+        // Update values
+        m_port = port;
+        m_host = host;
+        // Start server for listening
+        this->start();
+    }
 }
 
 void Server::incomingConnection(qintptr handle)
