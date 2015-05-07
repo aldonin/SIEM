@@ -20,10 +20,11 @@ namespace Constants {
     }
 
     namespace Database {
-        const char DEFAULT_DB_NAME[]     = "database";
-        const char DEFAULT_DB_USERNAME[] = "admin";
-        const char DEFAULT_DB_PASSWORD[] = "administrator";
-        const char DEFAULT_DB_LOCATION[] = "localhost";
+        const char DEFAULT_DB_NAME[]         = "database";
+        const char DEFAULT_DB_USERNAME[]     = "admin";
+        const char DEFAULT_DB_PASSWORD[]     = "administrator";
+        const char DEFAULT_DB_LOCATION[]     = "localhost";
+        const char TEST_DB_CONNECTION_NAME[] = "testDbConnection";
     }
 
     namespace Crypto {

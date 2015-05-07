@@ -33,10 +33,13 @@ private slots:
 
     void choseFolderClicked();
     void resetFolderClicked();
+    void choseDbLocationClicked();
 
     void hostModeChanged(bool);
 
     void defaultDatabaseBtnClicked();
+
+    void testDbConnection();
 
 };
 

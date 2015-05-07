@@ -4,6 +4,9 @@
 #include <QDebug>
 #include <QDir>
 #include <QFileDialog>
+#include <QSqlDatabase>
+#include <QMessageBox>
+#include <QSqlError>
 
 #include "constants.h"
 #include "simplecrypt.h"
@@ -46,8 +49,14 @@ SettingsWidget::SettingsWidget(QWidget *parent) :
     // Выбор папок для хранения временных файлов
     connect(xmlBrowseFolderBtn, SIGNAL(clicked()), this, SLOT(choseFolderClicked()));
 
+    // Выбор пути к БД
+    connect(dbLocationBtn, SIGNAL(clicked()), this, SLOT(choseDbLocationClicked()));
+
     // Сбросить папки для хранения файлов на дефолтные
     connect(xmlResetFolderBtn, SIGNAL(clicked()), this, SLOT(resetFolderClicked()));
+
+    // Протестировать соединение с выбранной БД
+    connect(testDBBtn, SIGNAL(clicked()), this, SLOT(testDbConnection()));
 }
 
 SettingsWidget::~SettingsWidget()
@@ -202,6 +211,19 @@ void SettingsWidget::resetFolderClicked()
     xmlFolderEdit->setText( QCoreApplication::applicationDirPath() + "/" + DEFAULT_FOLDER_XML_TEMPORARY );
 }
 
+void SettingsWidget::choseDbLocationClicked()
+{
+    QString file = QFileDialog::getOpenFileName(this,
+                                                tr("Open database file"),
+                                                QCoreApplication::applicationDirPath());
+
+    // User presses Cancel
+    if ( file.isNull() )
+        return;
+
+    dbLocation->setText(file);
+}
+
 void SettingsWidget::hostModeChanged(bool state)
 {
     hostLbl->setEnabled(state);
@@ -214,6 +236,33 @@ void SettingsWidget::defaultDatabaseBtnClicked()
     dbName->setText( DEFAULT_DB_NAME );
     dbUser->setText( DEFAULT_DB_USERNAME );
     dbPass->setText( DEFAULT_DB_PASSWORD );
+}
+
+void SettingsWidget::testDbConnection()
+{
+    {
+        // Добавим новую БД с именем TEST_DB_CONNECTION_NAME в список зарегистрированных БД
+        QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE", TEST_DB_CONNECTION_NAME);
+
+        db.setDatabaseName(dbLocation->text());
+        db.setUserName(dbUser->text());
+        db.setHostName(dbName->text());
+        db.setPassword(dbPass->text());
+
+        QMessageBox msgBox;
+        msgBox.setIcon(QMessageBox::Information);
+        msgBox.setWindowIcon(QIcon(":serverIcon.png"));
+        // Попытаемся соединиться с базой и проверить БД ли вообще это
+        QString status = db.open() && !db.tables().isEmpty() ? "Success" : "Failed";
+        msgBox.setText( QString("Connection database status: %1")
+                        .arg(status)
+                        );
+
+        msgBox.exec();
+    }
+
+    // Удалим созданную базу с именем TEST_DB_CONNECTION_NAME из списка зарегистрированных БД
+    QSqlDatabase::removeDatabase(TEST_DB_CONNECTION_NAME);
 }
 
 void SettingsWidget::notifyAllAboutChanges()
