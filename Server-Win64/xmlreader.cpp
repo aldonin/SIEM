@@ -3,7 +3,7 @@
 #include <QDomDocument>
 #include <QFile>
 #include <QDebug>
-#include <journalevent.h>
+#include "journalevent.h"
 #include "constants.h"
 
 using namespace Constants::Server;

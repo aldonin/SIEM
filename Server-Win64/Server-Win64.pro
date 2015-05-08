@@ -10,7 +10,8 @@ SOURCES += \
     journalevent.cpp \
     serverapplication.cpp \
     settingswidget.cpp \
-    simplecrypt.cpp
+    simplecrypt.cpp \
+    dbwriter.cpp
 
 HEADERS += \
     server.h \
@@ -20,7 +21,8 @@ HEADERS += \
     journalevent.h \
     serverapplication.h \
     settingswidget.h \
-    simplecrypt.h
+    simplecrypt.h \
+    dbwriter.h
 
 FORMS += \
     settingswidget.ui
