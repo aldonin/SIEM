@@ -15,9 +15,13 @@ XmlReader::XmlReader(const QString &fileName) :
     m_portAddres = DEFAULT_PORT;
 }
 
+XmlReader::~XmlReader()
+{
+    qDebug() << "~XmlReader";
+}
+
 void XmlReader::processXml()
 {
-    qDebug() << "processXml";
     QDomDocument doc;
     QFile file(m_fileName);
     if (!file.open(QIODevice::ReadOnly) || !doc.setContent(&file)) {
@@ -64,7 +68,7 @@ void XmlReader::getElements(QDomElement root, QString tag, QString att)
 
             // Если не пусты имя, значение и данных элемент не содержит подэлементов - добавляем соответствующее поле в событие
             if (!e.attribute(att).isEmpty() && !e.text().isEmpty() && e.elementsByTagName("Property").size() == 0)
-                ev->insert( e.attribute(att), e.text() );            
+                ev->insert( e.attribute(att), e.text() );
         }
     }
 

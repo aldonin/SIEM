@@ -2,6 +2,7 @@
 
 #include <QStringList>
 
+
 JournalEvent::JournalEvent()
 {
 
@@ -12,49 +13,49 @@ JournalEvent::~JournalEvent()
 
 }
 
-bool JournalEvent::insert(const QString &value, const QString &key)
+bool JournalEvent::insert(const QString &key, const QString &value)
 {
     QStringList lst;
     lst << "EventID" << "MachineName" << "Data" << "Index" << "Category" << "CategoryNumber"
         << "EntryType" << "Message" << "Source" << "InstanceId" << "TimeGenerated" << "TimeWritten";
 
-   int index = lst.indexOf(value);
+   int index = lst.indexOf(key);
    switch (index) {
    case 0:
-       EventID = key;
+       EventID = value.toInt();
        break;
    case 1:
-       MachineName = key;
+       MachineName = value;
        break;
    case 2:
-       Data = key;
+       Data = value;
        break;
    case 3:
-       Index = key;
+       Index = value.toInt();
        break;
    case 4:
-       Category = key;
+       Category = value;
        break;
    case 5:
-       CategoryNumber = key;
+       CategoryNumber = value.toInt();
        break;
    case 6:
-       EntryType = key;
+       EntryType = EntryTypefromString(value);
        break;
    case 7:
-       Message = key;
+       Message = value;
        break;
    case 8:
-       Source = key;
+       Source = value;
        break;
    case 9:
-       InstanceId = key;
+       InstanceId = value.toInt();
        break;
    case 10:
-       TimeGenerated = key;
+       TimeGenerated = QDateTime::fromString(value, "dd.MM.yyyy h:mm:ss");
        break;
    case 11:
-       TimeWritten = key;
+       TimeWritten = QDateTime::fromString(value, "dd.MM.yyyy h:mm:ss");
        break;
    case -1:
        return false;
@@ -67,9 +68,10 @@ bool JournalEvent::insert(const QString &value, const QString &key)
    }
 
    return true;
+
 }
 
-QString JournalEvent::getEventID() const
+int JournalEvent::getEventID() const
 {
     return EventID;
 }
@@ -84,7 +86,7 @@ QString JournalEvent::getData() const
     return Data;
 }
 
-QString JournalEvent::getIndex() const
+int JournalEvent::getIndex() const
 {
     return Index;
 }
@@ -94,11 +96,11 @@ QString JournalEvent::getCategory() const
     return Category;
 }
 
-QString JournalEvent::getCategoryNumber() const
+int JournalEvent::getCategoryNumber() const
 {
     return CategoryNumber;
 }
-QString JournalEvent::getEntryType() const
+int JournalEvent::getEntryType() const
 {
     return EntryType;
 }
@@ -113,19 +115,19 @@ QString JournalEvent::getSource() const
     return Source;
 }
 
-QString JournalEvent::getInstanceId() const
+int JournalEvent::getInstanceId() const
 {
     return InstanceId;
 }
 
 QString JournalEvent::getTimeGenerated() const
 {
-    return TimeGenerated;
+    return TimeGenerated.toString("dd.MM.yyyy hh:mm:ss");
 }
 
 QString JournalEvent::getTimeWritten() const
 {
-    return TimeWritten;
+    return TimeWritten.toString("dd.MM.yyyy hh:mm:ss");
 }
 
 quint16 JournalEvent::getPort() const
@@ -146,6 +148,37 @@ QHostAddress JournalEvent::host() const
 void JournalEvent::setHost(const QHostAddress &host)
 {
     m_host = host;
+}
+
+JournalEvent::EventLogEntryType JournalEvent::EntryTypefromString(const QString strType) const
+{
+    /*
+     * C Win7 x32 почему то иногда вместо QString имени EntryType приходит int значение.
+     * Приходится сначала пытаться распарсить int значение, а только потом пытаться найти соответствие с QString полем
+     */
+    bool okCast = false;
+    int type = strType.toInt(&okCast);
+    if (okCast)
+        return static_cast<EventLogEntryType>(type);
+
+
+    if ( strType.compare("Error", Qt::CaseInsensitive) == 0)
+        return EventLogEntryType::Error;
+
+    if ( strType.compare("FailureAudit", Qt::CaseInsensitive) == 0)
+        return EventLogEntryType::FailureAudit;
+
+    if ( strType.compare("Information", Qt::CaseInsensitive) == 0)
+        return EventLogEntryType::Information;
+
+    if ( strType.compare("SuccessAudit", Qt::CaseInsensitive) == 0)
+        return EventLogEntryType::SuccessAudit;
+
+    if ( strType.compare("Warning", Qt::CaseInsensitive) == 0)
+        return EventLogEntryType::Warning;
+
+    Q_UNREACHABLE();
+    return EventLogEntryType::Information;
 }
 
 

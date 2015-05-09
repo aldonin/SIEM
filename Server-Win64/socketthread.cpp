@@ -9,7 +9,7 @@ SocketThread::SocketThread(qintptr descriptor, QObject *parent)
       m_socketDescriptor(descriptor),
       m_blockSize(0)
 {
-    qDebug() << "SocketThread(), thread = " << QThread::currentThreadId();
+
 }
 
 SocketThread::~SocketThread()
@@ -49,6 +49,8 @@ void SocketThread::onReadyRead()
     in >> fileName;
     qDebug() << fileName.section("/", -1);
     QByteArray line = m_socket->readAll();
+
+    // TODO сохранять в файл с полученным именем
     QFile target("D:\\RECV___Application-29.04.2015_17-59-06.xml");
     if (!target.open(QIODevice::WriteOnly)) {
         qDebug() << "Can't open file for written";

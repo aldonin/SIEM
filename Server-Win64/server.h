@@ -35,5 +35,6 @@ private:
 };
 
 Q_DECLARE_METATYPE(QList<JournalEvent*>)
+Q_DECLARE_METATYPE(QHostAddress)
 
 #endif // SERVER_H

@@ -19,8 +19,14 @@ public slots:
     void push();
 
 private:
-    QList<JournalEvent*> *m_list;
+    QList<JournalEvent*> m_list;
     QString m_connectionName;
 };
+
+
+/*
+ * NOTE при отправки событий с локальной машины, вместо вписываемого хоста в БД будет писаться ::1
+ * Достаточно странное поведение, учитывая, что это значение возвращается при использовании IPv6
+ */
 
 #endif // DBWRITER_H

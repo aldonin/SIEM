@@ -174,11 +174,11 @@ void SettingsWidget::readSettings()
     if (enctyptedPassword != DEFAULT_DB_PASSWORD) {
         SimpleCrypt crypt;
         crypt.setKey(Constants::Crypto::KEY);
-        QString decryptPassword = crypt.decryptToString( enctyptedPassword );
-        dbPass->setText( decryptPassword );
-    } else {
-        dbPass->setText( enctyptedPassword );
+        enctyptedPassword = crypt.decryptToString( enctyptedPassword );
     }
+
+    dbPass->setText( enctyptedPassword );
+
 
     settings.endGroup();
 

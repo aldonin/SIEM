@@ -2,10 +2,9 @@
 
 #include "serverapplication.h"
 #include "simplecrypt.h"
+#include "journalevent.h"
 
 #include <QDebug>
-#include <QList>
-
 
 
 int main(int argc, char* argv[])
@@ -14,5 +13,11 @@ int main(int argc, char* argv[])
 
     return app.exec();
 
+//    QString entryType = "0";
+//    JournalEvent ev;
+//    int x = ev.EntryTypefromString(entryType);
+//    qDebug() << x;
+
+    return 0;
 }
 

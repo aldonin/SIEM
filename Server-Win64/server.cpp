@@ -1,6 +1,7 @@
 #include "server.h"
 #include "socketthread.h"
 #include "xmlreader.h"
+#include "dbwriter.h"
 
 #include <QDebug>
 #include <QSettings>
@@ -14,6 +15,7 @@ Server::Server(QHostAddress host, quint16 port, QObject *parent)
       m_port(port)
 {
     qRegisterMetaType<QList<JournalEvent*> >();
+    qRegisterMetaType<QHostAddress>();
 }
 
 Server::~Server()
@@ -61,7 +63,7 @@ void Server::incomingConnection(qintptr handle)
     SocketThread *thread = new SocketThread(handle);
     connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
 
-    connect(thread, SIGNAL(onFinishRecieved(QString, QString, quint16)),
+    connect(thread, SIGNAL(onFinishRecieved(QString, QHostAddress, quint16)),
             this,   SLOT(handleXml(QString, QHostAddress, quint16)));
 
     thread->start();
@@ -87,6 +89,16 @@ void Server::handleXml(const QString &fileName, const QHostAddress &host, const 
 
 void Server::writeToDataBase( QList<JournalEvent *> lst )
 {
-    qDebug() << lst.size();
+    DbWriter *writer = new DbWriter(lst);
+    QThread  *thread = new QThread;
+
+    writer->moveToThread(thread);
+
+    connect(thread, SIGNAL(started()),  writer, SLOT(push()));
+    connect(writer, SIGNAL(finished()), thread, SLOT(quit()));
+    connect(writer, SIGNAL(finished()), writer, SLOT(deleteLater()));
+    connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
+
+    thread->start();
 }
 

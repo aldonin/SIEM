@@ -15,6 +15,7 @@ class XmlReader : public QObject
 
 public:
     explicit XmlReader(const QString &fileName);
+    ~XmlReader();
 
     void setPortAddres(const quint16 &portAddres);
     void setHostAddres(const QHostAddress &hostAddres);

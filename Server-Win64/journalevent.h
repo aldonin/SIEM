@@ -4,26 +4,37 @@
 #include <QString>
 #include <QObject>
 #include <QHostAddress>
+#include <QDateTime>
 
 
 class JournalEvent
 {
+    Q_ENUMS(EventLogEntryType)
+
 public:
     JournalEvent();
     ~JournalEvent();
 
+    enum EventLogEntryType {
+        Information,
+        Error,
+        FailureAudit,
+        SuccessAudit,
+        Warning
+    };
+
     bool insert(const QString &value, const QString &key);
 
-    QString getEventID() const;
+    int     getEventID() const;
     QString getMachineName() const;
     QString getData() const;
-    QString getIndex() const;
+    int     getIndex() const;
     QString getCategory() const;
-    QString getCategoryNumber() const;
-    QString getEntryType() const;
+    int     getCategoryNumber() const;
+    int     getEntryType() const;
     QString getMessage() const;
     QString getSource() const;
-    QString getInstanceId() const;
+    int     getInstanceId() const;
     QString getTimeGenerated() const;
     QString getTimeWritten() const;
 
@@ -34,18 +45,18 @@ public:
     void setHost(const QHostAddress &host);
 
 private:
-    QString EventID;
-    QString MachineName;
-    QString Data;
-    QString Index;
-    QString Category;
-    QString CategoryNumber;
-    QString EntryType;
-    QString Message;
-    QString Source;
-    QString InstanceId;
-    QString TimeGenerated;
-    QString TimeWritten;
+    int               EventID;
+    QString           MachineName;
+    QString           Data;
+    int               Index;
+    QString           Category;
+    int               CategoryNumber;
+    EventLogEntryType EntryType;
+    QString           Message;
+    QString           Source;
+    int               InstanceId;
+    QDateTime         TimeGenerated;
+    QDateTime         TimeWritten;
 
     QHostAddress m_host;
     quint16      m_port;
@@ -53,6 +64,9 @@ private:
 private:
     JournalEvent(const JournalEvent&);
     JournalEvent& operator=(const JournalEvent&);
+public:
+
+    EventLogEntryType EntryTypefromString(const QString strType) const;
 };
 
 
