@@ -1,9 +1,6 @@
 #include <QCoreApplication>
 
 #include "serverapplication.h"
-#include "simplecrypt.h"
-#include "journalevent.h"
-
 #include <QDebug>
 
 

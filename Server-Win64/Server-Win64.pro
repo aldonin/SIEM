@@ -11,7 +11,8 @@ SOURCES += \
     serverapplication.cpp \
     settingswidget.cpp \
     simplecrypt.cpp \
-    dbwriter.cpp
+    dbwriter.cpp \
+    svmpredictor.cpp
 
 HEADERS += \
     server.h \
@@ -22,7 +23,8 @@ HEADERS += \
     serverapplication.h \
     settingswidget.h \
     simplecrypt.h \
-    dbwriter.h
+    dbwriter.h \
+    svmpredictor.h
 
 FORMS += \
     settingswidget.ui

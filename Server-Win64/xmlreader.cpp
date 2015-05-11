@@ -3,6 +3,7 @@
 #include <QDomDocument>
 #include <QFile>
 #include <QDebug>
+#include <QNetworkInterface>
 #include "journalevent.h"
 #include "constants.h"
 
@@ -25,6 +26,7 @@ void XmlReader::processXml()
     QDomDocument doc;
     QFile file(m_fileName);
     if (!file.open(QIODevice::ReadOnly) || !doc.setContent(&file)) {
+        qDebug() << file.fileName();
         qDebug() << "Can't open xml file for reading";
         emit finished( list );
         return;
@@ -85,7 +87,20 @@ void XmlReader::getElements(QDomElement root, QString tag, QString att)
 
 void XmlReader::setHostAddres(const QHostAddress &hostAddres)
 {
-    m_hostAddres = hostAddres;
+    /*
+     * При отправки событий с локальной машины вместо локального хоста приходит ::1
+     * Достаточно странное поведение, учитывая, что это значение возвращается при использовании AnyIPv6
+     */
+    if (hostAddres.toString() == "::1") {
+        foreach (const QHostAddress &address, QNetworkInterface::allAddresses()) {
+            if (address.protocol() == QAbstractSocket::IPv4Protocol && address != QHostAddress(QHostAddress::LocalHost)) {
+                m_hostAddres = address;
+                break;
+            }
+        }
+    } else {
+        m_hostAddres = hostAddres;
+    }
 }
 
 void XmlReader::setPortAddres(const quint16 &portAddres)

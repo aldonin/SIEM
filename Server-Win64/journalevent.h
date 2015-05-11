@@ -49,6 +49,7 @@ public:
 
 
     QString getJournalType() const;
+    JournalType getgetJournalTypeAsType() const;
     void setJournalType(const QString &type);
 
     quint16 getPort() const;
@@ -80,7 +81,7 @@ private:
     JournalEvent& operator=(const JournalEvent&);
 
 
-public:
+private:
     EventLogEntryType EntryTypefromString(const QString strType) const;
     JournalType       JournalTypeFromString(const QString strType) const;
 };

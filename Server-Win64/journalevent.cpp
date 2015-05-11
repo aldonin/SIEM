@@ -155,6 +155,11 @@ QString JournalEvent::getJournalType() const
     }
 }
 
+JournalEvent::JournalType JournalEvent::getgetJournalTypeAsType() const
+{
+    return type;
+}
+
 void JournalEvent::setJournalType(const QString &type)
 {
     this->type = JournalTypeFromString(type);

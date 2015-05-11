@@ -35,6 +35,27 @@ namespace Constants {
         const char DEFAULT_SVM_PATH[]             = "";
         const char DEFAULT_SVM_MODEL_FILE_PATH[]  = "";
         const char DEFAULT_SVM_FOLDER_TEMPORARY[] = "SVM_temporary";
+
+        const QString SVM_PREDICT          = "svm-predict.exe";
+        const QString SVM_OUTPUT_FILE_NAME = "result.t";
+        const QString SVM_TEST_FILE_NAME   = "test.t";
+
+        // Список взят отсюда http://habrahabr.ru/company/netwrix/blog/148501/
+        const QList<int> DANGER_EVENT_ID  = {675, 4771,
+                                             676, 672, 4768,
+                                             681, 680, 4776,
+                                             642, 4738,
+                                             632, 4728, 636, 4732, 660, 4756,
+                                             624, 4720,
+                                             644, 4740,
+                                             517, 1102,
+
+                                             529, 4625, 531, 532, 533, 534,  5461, 535, 539
+                                            };
+
+        const QStringList DANGER_MESSAGE_KEYWORDS = {"Error",  "Failure", "AppCrash", "Warning",
+                                                     "Ошибка", "Отказ",   "Крах",     "Крахом"
+                                                    };
     }
 
 }

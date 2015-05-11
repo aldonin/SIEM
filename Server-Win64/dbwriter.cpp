@@ -12,6 +12,7 @@
 #include "journalevent.h"
 #include "constants.h"
 #include "simplecrypt.h"
+#include "svmpredictor.h"
 
 using namespace Constants::Database;
 
@@ -58,11 +59,11 @@ void DbWriter::push()
 
     QSqlQuery query(db);
     for (auto it = m_list.begin(); it != m_list.end(); ++it) {
-
+        SVMPredictor p(*it);
         query.prepare("INSERT INTO Events VALUES(:SourceHost, :SourcePort, :JournalType, :EventID, "
                       " :MachineName, :Data, :Index, :Category, "
                       " :CategoryNumber, :EntryType, :Message, :Source, "
-                      " :InstanceId, :TimeGenerated, :TimeWritten)");
+                      " :InstanceId, :TimeGenerated, :TimeWritten, :SVMEstimation)");
 
         query.bindValue(":SourceHost",    (*it)->host().toString());
         query.bindValue(":SourcePort",    (*it)->getPort());
@@ -79,6 +80,7 @@ void DbWriter::push()
         query.bindValue(":InstanceId",    (*it)->getInstanceId());
         query.bindValue(":TimeGenerated", (*it)->getTimeGenerated());
         query.bindValue(":TimeWritten",   (*it)->getTimeWritten());
+        query.bindValue(":SVMEstimation", p.predict());
 
         if (!query.exec())
             qDebug() << "Can't execute query. Last error: " << query.lastError();
