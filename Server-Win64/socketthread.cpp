@@ -3,6 +3,7 @@
 #include <QTcpSocket>
 #include <QFile>
 #include <QDebug>
+#include <QSettings>
 
 SocketThread::SocketThread(qintptr descriptor, QObject *parent)
     : QThread(parent),
@@ -47,11 +48,13 @@ void SocketThread::onReadyRead()
 
     QString fileName;
     in >> fileName;
-    qDebug() << fileName.section("/", -1);
     QByteArray line = m_socket->readAll();
 
-    // TODO сохранять в файл с полученным именем
-    QFile target("D:\\RECV___Application-29.04.2015_17-59-06.xml");
+    QSettings settings;
+    QString filePath = settings.value("Path/XmlTemporary", QVariant("")).toString();
+    fileName = fileName.section("/", -1);
+    QFile target(filePath + "/" + fileName);
+
     if (!target.open(QIODevice::WriteOnly)) {
         qDebug() << "Can't open file for written";
         return;

@@ -10,6 +10,7 @@
 class JournalEvent
 {
     Q_ENUMS(EventLogEntryType)
+    Q_ENUMS(JournalType)
 
 public:
     JournalEvent();
@@ -21,6 +22,14 @@ public:
         FailureAudit,
         SuccessAudit,
         Warning
+    };
+
+    enum JournalType {
+        Application,
+        Security,
+        Setup,
+        System,
+        ForwardedEvents
     };
 
     bool insert(const QString &value, const QString &key);
@@ -38,6 +47,10 @@ public:
     QString getTimeGenerated() const;
     QString getTimeWritten() const;
 
+
+    QString getJournalType() const;
+    void setJournalType(const QString &type);
+
     quint16 getPort() const;
     void setPort(const quint16 &port);
 
@@ -45,6 +58,7 @@ public:
     void setHost(const QHostAddress &host);
 
 private:
+    JournalType       type;
     int               EventID;
     QString           MachineName;
     QString           Data;
@@ -64,9 +78,11 @@ private:
 private:
     JournalEvent(const JournalEvent&);
     JournalEvent& operator=(const JournalEvent&);
-public:
 
+
+public:
     EventLogEntryType EntryTypefromString(const QString strType) const;
+    JournalType       JournalTypeFromString(const QString strType) const;
 };
 
 

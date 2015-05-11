@@ -59,13 +59,14 @@ void DbWriter::push()
     QSqlQuery query(db);
     for (auto it = m_list.begin(); it != m_list.end(); ++it) {
 
-        query.prepare("INSERT INTO Events VALUES(:SourceHost, :SourcePort, :EventID, :MachineName,"
-                      " :Data, :Index, :Category, :CategoryNumber,"
-                      " :EntryType, :Message, :Source, :InstanceId,"
-                      " :TimeGenerated, :TimeWritten)");
+        query.prepare("INSERT INTO Events VALUES(:SourceHost, :SourcePort, :JournalType, :EventID, "
+                      " :MachineName, :Data, :Index, :Category, "
+                      " :CategoryNumber, :EntryType, :Message, :Source, "
+                      " :InstanceId, :TimeGenerated, :TimeWritten)");
 
         query.bindValue(":SourceHost",    (*it)->host().toString());
         query.bindValue(":SourcePort",    (*it)->getPort());
+        query.bindValue(":JournalType",   (*it)->getJournalType());
         query.bindValue(":EventID",       (*it)->getEventID());
         query.bindValue(":MachineName",   (*it)->getMachineName());
         query.bindValue(":Data",          (*it)->getData());

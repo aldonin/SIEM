@@ -130,6 +130,36 @@ QString JournalEvent::getTimeWritten() const
     return TimeWritten.toString("dd.MM.yyyy hh:mm:ss");
 }
 
+QString JournalEvent::getJournalType() const
+{
+    switch (type) {
+    case Application:
+        return QString("Application");
+        break;
+    case Security:
+        return QString("Security");
+        break;
+    case Setup:
+        return QString("Setup");
+        break;
+    case System:
+        return QString("System");
+        break;
+    case ForwardedEvents:
+        return QString("ForwardedEvents");
+        break;
+    default:
+        Q_UNREACHABLE();
+        return QString("Application");
+        break;
+    }
+}
+
+void JournalEvent::setJournalType(const QString &type)
+{
+    this->type = JournalTypeFromString(type);
+}
+
 quint16 JournalEvent::getPort() const
 {
     return m_port;
@@ -162,23 +192,44 @@ JournalEvent::EventLogEntryType JournalEvent::EntryTypefromString(const QString 
         return static_cast<EventLogEntryType>(type);
 
 
-    if ( strType.compare("Error", Qt::CaseInsensitive) == 0)
+    if ( strType.compare("Error", Qt::CaseInsensitive) == 0 )
         return EventLogEntryType::Error;
 
-    if ( strType.compare("FailureAudit", Qt::CaseInsensitive) == 0)
+    if ( strType.compare("FailureAudit", Qt::CaseInsensitive) == 0 )
         return EventLogEntryType::FailureAudit;
 
-    if ( strType.compare("Information", Qt::CaseInsensitive) == 0)
+    if ( strType.compare("Information", Qt::CaseInsensitive) == 0 )
         return EventLogEntryType::Information;
 
-    if ( strType.compare("SuccessAudit", Qt::CaseInsensitive) == 0)
+    if ( strType.compare("SuccessAudit", Qt::CaseInsensitive) == 0 )
         return EventLogEntryType::SuccessAudit;
 
-    if ( strType.compare("Warning", Qt::CaseInsensitive) == 0)
+    if ( strType.compare("Warning", Qt::CaseInsensitive) == 0 )
         return EventLogEntryType::Warning;
 
     Q_UNREACHABLE();
     return EventLogEntryType::Information;
+}
+
+JournalEvent::JournalType JournalEvent::JournalTypeFromString(const QString strType) const
+{
+    if ( strType.compare("Application", Qt::CaseInsensitive) == 0 )
+        return JournalType::Application;
+
+    if ( strType.compare("Security", Qt::CaseInsensitive) == 0 )
+        return JournalType::Security;
+
+    if ( strType.compare("Setup", Qt::CaseInsensitive) == 0 )
+        return JournalType::Setup;
+
+    if ( strType.compare("System", Qt::CaseInsensitive) == 0 )
+        return JournalType::System;
+
+    if ( strType.compare("ForwardedEvents", Qt::CaseInsensitive) == 0 )
+        return JournalType::ForwardedEvents;
+
+    Q_UNREACHABLE();
+    return JournalType::Application;
 }
 
 

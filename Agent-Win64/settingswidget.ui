@@ -407,6 +407,9 @@
                   </item>
                   <item>
                    <widget class="QCheckBox" name="setupBox">
+                    <property name="enabled">
+                     <bool>false</bool>
+                    </property>
                     <property name="text">
                      <string>Setup</string>
                     </property>
@@ -421,6 +424,9 @@
                   </item>
                   <item>
                    <widget class="QCheckBox" name="feBox">
+                    <property name="enabled">
+                     <bool>false</bool>
+                    </property>
                     <property name="text">
                      <string>Forwarded Events</string>
                     </property>

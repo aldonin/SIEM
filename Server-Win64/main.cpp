@@ -12,12 +12,5 @@ int main(int argc, char* argv[])
     ServerApplication app(argc, argv);
 
     return app.exec();
-
-//    QString entryType = "0";
-//    JournalEvent ev;
-//    int x = ev.EntryTypefromString(entryType);
-//    qDebug() << x;
-
-    return 0;
 }
 
