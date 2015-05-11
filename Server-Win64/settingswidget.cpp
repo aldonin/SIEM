@@ -15,6 +15,7 @@ using namespace Constants::Server;
 using namespace Constants::Time;
 using namespace Constants::TemporaryFolders;
 using namespace Constants::Database;
+using namespace Constants::SVM;
 
 SettingsWidget::SettingsWidget(QWidget *parent) :
     QWidget(parent), m_isCanClose(false)
@@ -57,6 +58,18 @@ SettingsWidget::SettingsWidget(QWidget *parent) :
 
     // Протестировать соединение с выбранной БД
     connect(testDBBtn, SIGNAL(clicked()), this, SLOT(testDbConnection()));
+
+    // Выбрать папку для SVM библиотек
+    connect(SVMFolderBtn, SIGNAL(clicked()), this, SLOT(choseSVMFolderClicked()));
+
+    // Выбрать файл модели SVM
+    connect(ModelFileBtn, SIGNAL(clicked()), this, SLOT(choseModelFilePath()));
+
+    // Сбросить папку для временных файлов SVM на дефолтную
+    connect(resetTempSVMBtn, SIGNAL(clicked()), this, SLOT(resetSVMTempFolder()));
+
+    // Выбрать папку для времнных файлов SVM
+    connect(tempSVMBtn, SIGNAL(clicked()), this, SLOT(choseTemporarySVMFolderClicked()));
 }
 
 SettingsWidget::~SettingsWidget()
@@ -109,11 +122,14 @@ void SettingsWidget::saveSettings()
         QDir().rmdir(oldDir);
 
     settings.setValue("XmlTemporary", xmlFolderEdit->text());
-    settings.endGroup();
 
     // Создадим новые папки
     if ( !QDir(xmlFolderEdit->text()).exists() )
         QDir().mkdir(xmlFolderEdit->text());
+
+    settings.endGroup();
+
+
 
 
     // Database
@@ -125,6 +141,23 @@ void SettingsWidget::saveSettings()
     crypt.setKey(Constants::Crypto::KEY);
     QString encryptedPassword = crypt.encryptToString(dbPass->text());
     settings.setValue("Password", encryptedPassword);
+    settings.endGroup();
+
+    // SVM
+    settings.beginGroup("SVM");
+    settings.setValue("LibraryPath",     SVMEdit->text());
+    settings.setValue("ModelFilePath",   ModelFileEdit->text());
+
+    // Удалим папки, которые были созданы до этого
+    QString oldDirSVM = settings.value("TemporaryFolder", QVariant("")).toString();
+    if (!oldDirSVM.isEmpty())
+        QDir().rmdir(oldDirSVM);
+
+    settings.setValue("TemporaryFolder", tempSVMEdit->text());
+
+    // Создадим новые папки
+    if ( !QDir(tempSVMEdit->text()).exists() )
+        QDir().mkdir(tempSVMEdit->text());
     settings.endGroup();
 
     emit settingsSaved();
@@ -182,6 +215,16 @@ void SettingsWidget::readSettings()
 
     settings.endGroup();
 
+    // SVM
+    settings.beginGroup("SVM");
+    SVMEdit->setText( settings.value("LibraryPath", QVariant(DEFAULT_SVM_PATH)).toString() );
+    ModelFileEdit->setText( settings.value("ModelFilePath", QVariant(DEFAULT_SVM_MODEL_FILE_PATH)).toString() );
+    tempSVMEdit->setText( settings.value("TemporaryFolder", QVariant(QCoreApplication::applicationDirPath() + "/" + DEFAULT_SVM_FOLDER_TEMPORARY)).toString() );
+
+    if (!QDir(tempSVMEdit->text()).exists())
+        QDir().mkdir(tempSVMEdit->text());
+
+    settings.endGroup();
 }
 
 void SettingsWidget::defaultServerBtnClicked()
@@ -224,6 +267,32 @@ void SettingsWidget::choseDbLocationClicked()
     dbLocation->setText(file);
 }
 
+void SettingsWidget::choseSVMFolderClicked()
+{
+    QString dir = QFileDialog::getExistingDirectory(this,
+                                                    tr("Chose Directory"),
+                                                    QCoreApplication::applicationDirPath(),
+                                                    QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
+
+    if (!dir.isEmpty() && QDir(dir).exists()) {
+        QStringList files;
+        files << "libsvm.dll" << "svm-predict.exe" << "svmpredict.mexw64";
+
+        foreach (QString file, files) {
+            if (!QFile::exists(dir + "/" + file)) {
+                QMessageBox msgBox;
+                msgBox.setIcon(QMessageBox::Warning);
+                msgBox.setWindowIcon(QIcon(":serverIcon.png"));
+                msgBox.setText(QString("Can't find %1 at current directory").arg(file));
+                msgBox.exec();
+                return;
+            }
+        }
+
+        SVMEdit->setText( dir );
+    }
+}
+
 void SettingsWidget::hostModeChanged(bool state)
 {
     hostLbl->setEnabled(state);
@@ -263,6 +332,40 @@ void SettingsWidget::testDbConnection()
 
     // Удалим созданную базу с именем TEST_DB_CONNECTION_NAME из списка зарегистрированных БД
     QSqlDatabase::removeDatabase(TEST_DB_CONNECTION_NAME);
+}
+
+void SettingsWidget::choseModelFilePath()
+{
+    QString file = QFileDialog::getOpenFileName(this,
+                                                tr("Chose model file path"),
+                                                QCoreApplication::applicationDirPath());
+
+    // User presses Cancel
+    if ( file.isNull() )
+        return;
+
+    ModelFileEdit->setText(file);
+}
+
+void SettingsWidget::choseTemporarySVMFolderClicked()
+{
+    QString dir = QFileDialog::getExistingDirectory(this,
+                                                    tr("Chose Directory"),
+                                                    QCoreApplication::applicationDirPath(),
+                                                    QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
+
+    if (dir.isEmpty())
+        return;
+
+    if (!QDir(dir).exists())
+        QDir().mkdir(dir);
+
+    tempSVMEdit->setText( dir );
+}
+
+void SettingsWidget::resetSVMTempFolder()
+{
+    tempSVMEdit->setText( QCoreApplication::applicationDirPath() + "/" + DEFAULT_SVM_FOLDER_TEMPORARY );
 }
 
 void SettingsWidget::notifyAllAboutChanges()

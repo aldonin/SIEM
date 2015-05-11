@@ -31,6 +31,12 @@ namespace Constants {
         const quint64 KEY = Q_UINT64_C(0x0a9dc2a6cab3f78a);
     }
 
+    namespace SVM {
+        const char DEFAULT_SVM_PATH[]             = "";
+        const char DEFAULT_SVM_MODEL_FILE_PATH[]  = "";
+        const char DEFAULT_SVM_FOLDER_TEMPORARY[] = "SVM_temporary";
+    }
+
 }
 
 #endif // CONSTANTS

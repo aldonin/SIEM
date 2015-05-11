@@ -7,5 +7,6 @@
         <file>refresh.png</file>
         <file>Database.png</file>
         <file>serverIcon.png</file>
+        <file>SVM.png</file>
     </qresource>
 </RCC>

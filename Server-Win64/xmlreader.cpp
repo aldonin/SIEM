@@ -62,10 +62,9 @@ void XmlReader::getElements(QDomElement root, QString tag, QString att)
 
     /* Зададим JournalType исходя из имени файла, т.к. имя файла всегда приходит в формате:
      * JournalType-Date_Time.xml
-     * example: Application-29.04.2015_17-59-06.xml
-     * То есть, возьмем все, что стоит перед "-" - это и будет тип журнала
+     * example: D:/tempFolder/Application-29.04.2015_17-59-06.xml
+     * То есть, возьмем последнюю директорию файла и отрежем все, что стоит перед "-" - это и будет тип журнала
      */
-    // FIXME adf
     QString fileName = m_fileName.section("/", -1);
     ev->setJournalType( fileName.left( fileName.indexOf("-") ) );
 
