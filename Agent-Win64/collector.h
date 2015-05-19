@@ -22,6 +22,9 @@ public:
      */
     explicit Collector(QObject *parent = 0);
 
+    /*!
+     * \brief Free resources, save settings before deleting.
+     */
     ~Collector();
 
 private:

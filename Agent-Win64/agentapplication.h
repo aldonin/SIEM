@@ -29,6 +29,10 @@ public:
      * Start event loop for UI settings widget. Create connections.
      */
     AgentApplication(int argc, char *argv[]);
+
+    /*!
+     * \brief Free resources, delete TrayIcon.
+     */
     ~AgentApplication();
 
     /*! Types of journals. */

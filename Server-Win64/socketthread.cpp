@@ -40,7 +40,7 @@ void SocketThread::onReadyRead()
 
     if (m_blockSize == 0) {
         if (m_socket->bytesAvailable() < sizeof(quint32))
-        return;
+            return;
         in >> m_blockSize;
     }
     if (m_socket->bytesAvailable() < m_blockSize)
