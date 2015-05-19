@@ -15,4 +15,3 @@ int main(int argc, char* argv[])
     AgentApplication app(argc, argv);
     return app.exec();
 }
-// TODO папка для временных файлов
