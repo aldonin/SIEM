@@ -1,5 +1,4 @@
 # SIEM
-===========
 
 Agent module of SIEM system.
 The main handling goal is:

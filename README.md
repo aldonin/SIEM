@@ -1,8 +1,6 @@
 # SIEM
-===========
 Security information and event management
 
-===========
 # Requirements
 <ul>
 <li>OS: Windows 7 x64 x86, Windows XP particully functionality at this moment</li>

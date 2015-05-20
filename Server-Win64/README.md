@@ -1,5 +1,4 @@
 # SIEM
-===========
 
 Server module of SIEM system.
 The main handling goal is:

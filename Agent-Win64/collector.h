@@ -36,10 +36,10 @@ private:
     void saveSettings();
 
 private:
-    QString executeStr;                                             /// \brief PowerShell execution string.
-    QMap<AgentApplication::Journal, QDateTime> m_lastTimeCollect;   /// \brief Map of journals and their last datetime grab.
-    QString m_psScriptTempFolder;                                   /// \brief Temporary folder for PowerShell script.
-    QString m_xmlTempFolder;                                        /// \brief Temporary folder for Xml files.
+    QString executeStr;                                             ///< PowerShell execution string.
+    QMap<AgentApplication::Journal, QDateTime> m_lastTimeCollect;   ///< Map of journals and their last datetime grab.
+    QString m_psScriptTempFolder;                                   ///< Temporary folder for PowerShell script.
+    QString m_xmlTempFolder;                                        ///< Temporary folder for Xml files.
 
 public slots:
     /*!

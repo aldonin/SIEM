@@ -42,8 +42,8 @@ signals:
     void quitApplication();
 
 private:
-    QSystemTrayIcon *m_trayIcon;    /// \brief Tray icon widget.
-    SettingsWidget *m_settings;     /// \brief Settings widget.
+    QSystemTrayIcon *m_trayIcon;    ///< Tray icon widget.
+    SettingsWidget *m_settings;     ///< Settings widget.
 
 private slots:
     /*!
