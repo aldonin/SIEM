@@ -26,8 +26,6 @@ ShellAsker::ShellAsker(QObject *parent) : QObject(parent)
     for (int i = 0; i < 4; ++i)
         kernels << i;
 
-
-    proc = new QProcess;
 }
 
 ShellAsker::~ShellAsker()
@@ -36,7 +34,9 @@ ShellAsker::~ShellAsker()
 }
 
 void ShellAsker::startAsking()
-{
+{    
+    proc = new QProcess;
+
     foreach (int type, svmTypes) {
 
         foreach (int kernel, kernels) {
@@ -50,11 +50,11 @@ void ShellAsker::startAsking()
 
                 proc->waitForFinished();
 
-                proc->start("cmd /C powershell -File predict.ps1");
+                proc->start("cmd /C powershell -NoProfile –ExecutionPolicy Unrestricted -File predict.ps1");
                 proc->waitForFinished();
             }
 
-            proc->start("cmd /C powershell -File endl.ps1");
+            proc->start("cmd /C powershell -NoProfile –ExecutionPolicy Unrestricted -File endl.ps1");
             proc->waitForFinished();
         }
     }
