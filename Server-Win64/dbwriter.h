@@ -8,7 +8,7 @@ class JournalEvent;
 /*!
  * \brief Database Writer class
  *
- * Use for commit journal events to BD.
+ * Use for commit journal events to Data base.
  * \sa JournalEvent
  */
 class DbWriter : public QObject

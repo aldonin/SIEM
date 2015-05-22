@@ -1,0 +1,19 @@
+var searchData=
+[
+  ['getcategory',['getCategory',['../class_journal_event.html#aad1d103924c9e4b35199826fbdcc10a9',1,'JournalEvent']]],
+  ['getcategorynumber',['getCategoryNumber',['../class_journal_event.html#a1c4953441a5bcec7a5c0c9edae3adc20',1,'JournalEvent']]],
+  ['getdata',['getData',['../class_journal_event.html#a6b37c9b3a6fcd4348cc79a05981e1ecc',1,'JournalEvent']]],
+  ['getelements',['getElements',['../class_xml_reader.html#ac78206db51cc0dd95ff457fdbce5043b',1,'XmlReader']]],
+  ['getentrytype',['getEntryType',['../class_journal_event.html#a2a72f12d61abbbf3c9205a792895f4eb',1,'JournalEvent']]],
+  ['geteventid',['getEventID',['../class_journal_event.html#a05de62365acd7b11594c82ce66aeadbd',1,'JournalEvent']]],
+  ['getgetjournaltypeastype',['getgetJournalTypeAsType',['../class_journal_event.html#a08ad845250f512b3fd2eb4c4684c6001',1,'JournalEvent']]],
+  ['getindex',['getIndex',['../class_journal_event.html#acac472db2e3e7ed3746fb668baec4d39',1,'JournalEvent']]],
+  ['getinstanceid',['getInstanceId',['../class_journal_event.html#ad72edfc95297521e3c11bdc0f41fe716',1,'JournalEvent']]],
+  ['getjournaltype',['getJournalType',['../class_journal_event.html#a17d768953ee32947e12e2f1fad6f9f64',1,'JournalEvent']]],
+  ['getmachinename',['getMachineName',['../class_journal_event.html#a8dd5285f338abac39438e5abe8b08b15',1,'JournalEvent']]],
+  ['getmessage',['getMessage',['../class_journal_event.html#abea003797beb8d75a4138a3403777298',1,'JournalEvent']]],
+  ['getport',['getPort',['../class_journal_event.html#a6d7cc171b3f20fc90ec438759d64e553',1,'JournalEvent']]],
+  ['getsource',['getSource',['../class_journal_event.html#ae8649cabeaf92c2fac15e2108ef143fd',1,'JournalEvent']]],
+  ['gettimegenerated',['getTimeGenerated',['../class_journal_event.html#a3cefb307d0fd3ce975e538769abd61eb',1,'JournalEvent']]],
+  ['gettimewritten',['getTimeWritten',['../class_journal_event.html#aaa05322c1e69fdd2d3cf4dacbfd0c2d0',1,'JournalEvent']]]
+];
