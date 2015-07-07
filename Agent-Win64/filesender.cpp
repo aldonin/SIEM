@@ -2,6 +2,7 @@
 #include <QTcpSocket>
 #include <QFile>
 #include <QSettings>
+#include <QDataStream>
 #include "constants.h"
 
 using namespace Constants::Server;

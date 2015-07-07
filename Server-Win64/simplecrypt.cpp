@@ -4,6 +4,7 @@
 #include <QtDebug>
 #include <QtGlobal>
 #include <QDateTime>
+#include <QDataStream>
 #include <QCryptographicHash>
 
 SimpleCrypt::SimpleCrypt():

@@ -3,6 +3,7 @@
 #include <QTcpSocket>
 #include <QFile>
 #include <QDebug>
+#include <QDataStream>
 #include <QSettings>
 
 SocketThread::SocketThread(qintptr descriptor, QObject *parent)
